@@ -7,6 +7,14 @@ header('Content-Type: application/json; charset=utf-8');
 $path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
+if (str_starts_with($path, '/web1/')) {
+    $path = substr($path, strlen('/web1'));
+}
+
+if ($path === '/web1') {
+    $path = '/';
+}
+
 if ($path === '/api/v1/health' && $method === 'GET') {
     http_response_code(200);
     echo json_encode([
