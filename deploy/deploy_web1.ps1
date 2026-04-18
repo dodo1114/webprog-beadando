@@ -76,14 +76,27 @@ try {
 $remoteCommand = @"
 set -e
 export DEBIAN_FRONTEND=noninteractive
-if ! command -v mysql >/dev/null 2>&1; then
+if ! command -v mysql >/dev/null 2>&1 || ! php -m | grep -qi '^mbstring$' || ! php -m | grep -qi '^pdo_mysql$'; then
     apt-get update
-    apt-get install -y mariadb-server mariadb-client php-mysql
+    apt-get install -y mariadb-server mariadb-client php-mysql php-mbstring
 fi
 systemctl enable --now mariadb
+UPLOADS_BACKUP='/root/.web1_uploads_backup'
+rm -rf "`$UPLOADS_BACKUP"
+if [ -d '$RemotePath/backend/public/uploads' ]; then
+    mkdir -p "`$UPLOADS_BACKUP"
+    cp -a '$RemotePath/backend/public/uploads/.' "`$UPLOADS_BACKUP"/
+fi
 rm -rf '$RemotePath'
 mkdir -p '$RemotePath'
 tar -xzf /root/_tmp_web1.tgz -C '$RemotePath'
+mkdir -p '$RemotePath/backend/public/uploads'
+if [ -d "`$UPLOADS_BACKUP" ]; then
+    cp -a "`$UPLOADS_BACKUP"/. '$RemotePath/backend/public/uploads'/
+    rm -rf "`$UPLOADS_BACKUP"
+fi
+chown -R www-data:www-data '$RemotePath/backend/public/uploads'
+chmod 775 '$RemotePath/backend/public/uploads'
 PASSWORD_FILE='/root/.web1_db_password'
 if [ ! -f "`$PASSWORD_FILE" ]; then
     openssl rand -hex 24 > "`$PASSWORD_FILE"

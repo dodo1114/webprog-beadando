@@ -388,7 +388,7 @@ function handleContactSubmit(): never
         redirectTo('/kapcsolat');
     }
 
-    if (mb_strlen($subject) < 3 || mb_strlen($message) < 10) {
+    if (stringLength($subject) < 3 || stringLength($message) < 10) {
         flash('error', 'A tárgy legyen legalább 3, az üzenet legalább 10 karakter hosszú.');
         redirectTo('/kapcsolat');
     }
@@ -895,6 +895,15 @@ function readJsonPayload(): array
 function normalizeField(array $payload, string $field): string
 {
     return trim((string)($payload[$field] ?? ''));
+}
+
+function stringLength(string $value): int
+{
+    if (function_exists('mb_strlen')) {
+        return mb_strlen($value);
+    }
+
+    return strlen($value);
 }
 
 function softwareRepository(): SoftwareRepository
