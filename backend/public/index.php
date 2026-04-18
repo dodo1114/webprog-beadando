@@ -19,16 +19,24 @@ if ($path === '/web1') {
     $path = '/';
 }
 
-$repository = new SoftwareRepository(
-    dirname(__DIR__) . '/storage/software.json',
-    __DIR__ . '/data/software.json',
-);
-
 if ($path === '/api/v1/health' && $method === 'GET') {
+    try {
+        $connectionInfo = repository()->getConnectionInfo();
+    } catch (RuntimeException $exception) {
+        respond(500, [
+            'status' => 'error',
+            'service' => 'webprog-assignment',
+            'phase' => 'mysql-crud',
+            'message' => $exception->getMessage(),
+        ]);
+    }
+
     respond(200, [
         'status' => 'ok',
         'service' => 'webprog-assignment',
-        'phase' => 'fetch-api-crud',
+        'phase' => 'mysql-crud',
+        'storage' => 'mysql',
+        'table' => $connectionInfo['table'],
         'time_utc' => gmdate('c'),
     ]);
 }
@@ -36,7 +44,7 @@ if ($path === '/api/v1/health' && $method === 'GET') {
 if ($path === '/api/v1/software' && $method === 'GET') {
     try {
         respond(200, [
-            'items' => $repository->getAll(),
+            'items' => repository()->getAll(),
         ]);
     } catch (RuntimeException $exception) {
         respond(500, [
@@ -59,7 +67,7 @@ if ($path === '/api/v1/software' && $method === 'POST') {
     }
 
     try {
-        $created = $repository->create($name, $category);
+        $created = repository()->create($name, $category);
         respond(201, [
             'message' => 'A szoftver sikeresen létrejött.',
             'item' => $created,
@@ -77,7 +85,7 @@ if (preg_match('#^/api/v1/software/(\d+)$#', $path, $matches) === 1) {
 
     try {
         if ($method === 'GET') {
-            $item = $repository->find($id);
+            $item = repository()->find($id);
             if ($item === null) {
                 respond(404, [
                     'error' => 'not_found',
@@ -100,7 +108,7 @@ if (preg_match('#^/api/v1/software/(\d+)$#', $path, $matches) === 1) {
                 ]);
             }
 
-            $updated = $repository->update($id, $name, $category);
+            $updated = repository()->update($id, $name, $category);
             if ($updated === null) {
                 respond(404, [
                     'error' => 'not_found',
@@ -115,7 +123,7 @@ if (preg_match('#^/api/v1/software/(\d+)$#', $path, $matches) === 1) {
         }
 
         if ($method === 'DELETE') {
-            $deleted = $repository->delete($id);
+            $deleted = repository()->delete($id);
             if ($deleted === null) {
                 respond(404, [
                     'error' => 'not_found',
@@ -186,4 +194,20 @@ function readJsonPayload(): array
 function normalizeField(array $payload, string $field): string
 {
     return trim((string)($payload[$field] ?? ''));
+}
+
+function repository(): SoftwareRepository
+{
+    static $repository = null;
+
+    if ($repository instanceof SoftwareRepository) {
+        return $repository;
+    }
+
+    $repository = new SoftwareRepository(
+        dirname(__DIR__) . '/.env',
+        __DIR__ . '/data/software.json',
+    );
+
+    return $repository;
 }

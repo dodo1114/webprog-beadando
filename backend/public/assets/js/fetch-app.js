@@ -261,6 +261,7 @@ function renderTable(filteredItems) {
 function renderFormState() {
   const selectedItem = state.items.find((item) => item.id === state.selectedId);
   elements.formTitle.textContent = selectedItem ? "Szoftver szerkesztése" : "Új szoftver felvétele";
+  elements.submitButton.textContent = selectedItem ? "Módosítás mentése" : "Mentés";
 }
 
 function resetForm() {

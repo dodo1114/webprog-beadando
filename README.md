@@ -10,7 +10,7 @@ A projekt jelenleg az alábbi működő blokkokat tartalmazza:
 - működő JavaScript CRUD oldal a szoftverleltár adatkörével
 - működő React CRUD oldal ugyanarra az adatkészletre
 - működő React-alapú SPA két miniappal és közös kliensoldali állapottal
-- működő PHP CRUD API JSON-alapú szerveroldali tárolóval
+- működő PHP CRUD API MySQL adatbázis-alapú szerveroldali mentéssel
 - működő Fetch API oldal, amely a PHP backenddel kommunikál
 - működő Axios CRUD oldal React komponensekkel és Axios klienssel
 - működő OOJS műhely class alapú DOM-építéssel és telepítési profil szerkesztővel
@@ -35,7 +35,7 @@ A projekt jelenleg az alábbi működő blokkokat tartalmazza:
 - `backend/public/index.php`
   API belépési pont
 - `backend/src/SoftwareRepository.php`
-  fájlalapú szerveroldali adattároló
+  PDO-alapú MySQL adattároló
 - `docs/assignment-checklist.md`
   feladatblokk lista
 - `docs/github-teamwork.md`

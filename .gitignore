@@ -4,6 +4,8 @@ onir-output/
 android/
 dist/
 scripts/
+!backend/scripts/
+!backend/scripts/*.php
 *.zip
 *.pdf
 Web-1-*.txt

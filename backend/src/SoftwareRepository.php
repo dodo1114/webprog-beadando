@@ -4,14 +4,38 @@ declare(strict_types=1);
 
 namespace App;
 
+use PDO;
+use PDOException;
 use RuntimeException;
 
 final class SoftwareRepository
 {
+    private PDO $pdo;
+    private string $table;
+
     public function __construct(
-        private readonly string $storagePath,
+        private readonly string $envPath,
         private readonly string $seedPath,
     ) {
+        $config = $this->readConfig();
+        $this->table = $config['DB_TABLE'] ?? 'software_items';
+
+        try {
+            $this->pdo = new PDO(
+                $config['DB_DSN'] ?? '',
+                $config['DB_USER'] ?? '',
+                $config['DB_PASSWORD'] ?? '',
+                [
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                ]
+            );
+        } catch (PDOException $exception) {
+            throw new RuntimeException('Az adatbázis-kapcsolat nem hozható létre: ' . $exception->getMessage(), 0, $exception);
+        }
+
+        $this->ensureSchema();
+        $this->seedIfEmpty();
     }
 
     /**
@@ -19,157 +43,165 @@ final class SoftwareRepository
      */
     public function getAll(): array
     {
-        $this->ensureStorageExists();
+        $statement = $this->pdo->query(
+            "SELECT id, nev, kategoria
+             FROM {$this->table}
+             ORDER BY nev ASC, id ASC"
+        );
 
-        $handle = fopen($this->storagePath, 'c+');
-        if ($handle === false) {
-            throw new RuntimeException('A tárolófájl nem nyitható meg olvasásra.');
-        }
-
-        try {
-            if (!flock($handle, LOCK_SH)) {
-                throw new RuntimeException('A tárolófájl nem zárolható olvasásra.');
-            }
-
-            rewind($handle);
-            $contents = stream_get_contents($handle);
-
-            return $this->decodeItems($contents === false ? '' : $contents);
-        } finally {
-            flock($handle, LOCK_UN);
-            fclose($handle);
-        }
+        return $this->normalizeRows($statement->fetchAll());
     }
 
     public function find(int $id): ?array
     {
-        foreach ($this->getAll() as $item) {
-            if ($item['id'] === $id) {
-                return $item;
-            }
-        }
+        $statement = $this->pdo->prepare(
+            "SELECT id, nev, kategoria
+             FROM {$this->table}
+             WHERE id = :id"
+        );
+        $statement->execute(['id' => $id]);
 
-        return null;
+        $row = $statement->fetch();
+        return $row === false ? null : $this->normalizeRow($row);
     }
 
     public function create(string $name, string $category): array
     {
-        return $this->mutate(function (array $items) use ($name, $category): array {
-            $nextId = 1;
-            foreach ($items as $item) {
-                $nextId = max($nextId, $item['id'] + 1);
-            }
+        $statement = $this->pdo->prepare(
+            "INSERT INTO {$this->table} (nev, kategoria)
+             VALUES (:nev, :kategoria)"
+        );
+        $statement->execute([
+            'nev' => $name,
+            'kategoria' => $category,
+        ]);
 
-            $created = [
-                'id' => $nextId,
-                'nev' => $name,
-                'kategoria' => $category,
-            ];
-
-            array_unshift($items, $created);
-
-            return [$created, $items];
-        });
+        return $this->find((int)$this->pdo->lastInsertId()) ?? [
+            'id' => (int)$this->pdo->lastInsertId(),
+            'nev' => $name,
+            'kategoria' => $category,
+        ];
     }
 
     public function update(int $id, string $name, string $category): ?array
     {
-        return $this->mutate(function (array $items) use ($id, $name, $category): array {
-            $updated = null;
+        $statement = $this->pdo->prepare(
+            "UPDATE {$this->table}
+             SET nev = :nev, kategoria = :kategoria
+             WHERE id = :id"
+        );
+        $statement->execute([
+            'id' => $id,
+            'nev' => $name,
+            'kategoria' => $category,
+        ]);
 
-            foreach ($items as $index => $item) {
-                if ($item['id'] !== $id) {
-                    continue;
-                }
+        if ($statement->rowCount() === 0 && $this->find($id) === null) {
+            return null;
+        }
 
-                $updated = [
-                    'id' => $id,
-                    'nev' => $name,
-                    'kategoria' => $category,
-                ];
-                $items[$index] = $updated;
-                break;
-            }
-
-            return [$updated, $items];
-        });
+        return $this->find($id);
     }
 
     public function delete(int $id): ?array
     {
-        return $this->mutate(function (array $items) use ($id): array {
-            $deleted = null;
-            $remaining = [];
+        $existing = $this->find($id);
+        if ($existing === null) {
+            return null;
+        }
 
-            foreach ($items as $item) {
-                if ($item['id'] === $id) {
-                    $deleted = $item;
-                    continue;
-                }
+        $statement = $this->pdo->prepare(
+            "DELETE FROM {$this->table}
+             WHERE id = :id"
+        );
+        $statement->execute(['id' => $id]);
 
-                $remaining[] = $item;
-            }
-
-            return [$deleted, $remaining];
-        });
+        return $existing;
     }
 
-    private function ensureStorageExists(): void
+    public function getConnectionInfo(): array
     {
-        if (is_file($this->storagePath)) {
+        return [
+            'table' => $this->table,
+        ];
+    }
+
+    private function ensureSchema(): void
+    {
+        $sql = <<<SQL
+CREATE TABLE IF NOT EXISTS {$this->table} (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    nev VARCHAR(255) NOT NULL,
+    kategoria VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci
+SQL;
+
+        $this->pdo->exec($sql);
+    }
+
+    private function seedIfEmpty(): void
+    {
+        $statement = $this->pdo->query("SELECT COUNT(*) FROM {$this->table}");
+        $count = (int)$statement->fetchColumn();
+        if ($count > 0) {
             return;
         }
 
-        $directory = dirname($this->storagePath);
-        if (!is_dir($directory) && !mkdir($directory, 0775, true) && !is_dir($directory)) {
-            throw new RuntimeException('A tárolómappa nem hozható létre.');
-        }
-
         $seedItems = $this->loadSeedItems();
-        $encoded = $this->encodeItems($seedItems);
-
-        if (file_put_contents($this->storagePath, $encoded, LOCK_EX) === false) {
-            throw new RuntimeException('A kezdeti tárolófájl nem hozható létre.');
+        if ($seedItems === []) {
+            return;
         }
+
+        $insert = $this->pdo->prepare(
+            "INSERT INTO {$this->table} (id, nev, kategoria)
+             VALUES (:id, :nev, :kategoria)"
+        );
+
+        foreach ($seedItems as $item) {
+            $insert->execute([
+                'id' => $item['id'],
+                'nev' => $item['nev'],
+                'kategoria' => $item['kategoria'],
+            ]);
+        }
+
+        $maxId = max(array_column($seedItems, 'id'));
+        $this->pdo->exec("ALTER TABLE {$this->table} AUTO_INCREMENT = " . ((int)$maxId + 1));
     }
 
-    private function mutate(callable $callback): mixed
+    /**
+     * @return array<string, string>
+     */
+    private function readConfig(): array
     {
-        $this->ensureStorageExists();
-
-        $handle = fopen($this->storagePath, 'c+');
-        if ($handle === false) {
-            throw new RuntimeException('A tárolófájl nem nyitható meg módosításra.');
+        if (!is_file($this->envPath)) {
+            throw new RuntimeException('A backend/.env fájl hiányzik, ezért az adatbázis nem konfigurálható.');
         }
 
-        try {
-            if (!flock($handle, LOCK_EX)) {
-                throw new RuntimeException('A tárolófájl nem zárolható módosításra.');
-            }
-
-            rewind($handle);
-            $contents = stream_get_contents($handle);
-            $items = $this->decodeItems($contents === false ? '' : $contents);
-
-            [$result, $nextItems] = $callback($items);
-
-            rewind($handle);
-            if (!ftruncate($handle, 0)) {
-                throw new RuntimeException('A tárolófájl nem írható felül.');
-            }
-
-            $encoded = $this->encodeItems($nextItems);
-            if (fwrite($handle, $encoded) === false) {
-                throw new RuntimeException('A tárolófájl frissítése sikertelen.');
-            }
-
-            fflush($handle);
-
-            return $result;
-        } finally {
-            flock($handle, LOCK_UN);
-            fclose($handle);
+        $lines = file($this->envPath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        if ($lines === false) {
+            throw new RuntimeException('A backend/.env fájl nem olvasható.');
         }
+
+        $config = [];
+
+        foreach ($lines as $line) {
+            $trimmed = trim($line);
+            if ($trimmed === '' || str_starts_with($trimmed, '#')) {
+                continue;
+            }
+
+            [$key, $value] = array_pad(explode('=', $trimmed, 2), 2, '');
+            $config[trim($key)] = trim($value);
+        }
+
+        if (($config['DB_DSN'] ?? '') === '') {
+            throw new RuntimeException('A DB_DSN érték hiányzik a backend/.env fájlból.');
+        }
+
+        return $config;
     }
 
     /**
@@ -186,61 +218,54 @@ final class SoftwareRepository
             throw new RuntimeException('A seed adatfájl nem olvasható.');
         }
 
-        return $this->decodeItems($contents);
-    }
-
-    /**
-     * @return array<int, array{id:int, nev:string, kategoria:string}>
-     */
-    private function decodeItems(string $contents): array
-    {
-        if (trim($contents) === '') {
-            return [];
-        }
-
         $decoded = json_decode($contents, true);
         if (!is_array($decoded)) {
-            throw new RuntimeException('A JSON adattároló sérült vagy nem értelmezhető.');
+            throw new RuntimeException('A seed JSON nem értelmezhető.');
         }
 
-        $items = [];
-
-        foreach ($decoded as $item) {
-            if (!is_array($item)) {
-                continue;
-            }
-
-            $id = (int)($item['id'] ?? 0);
-            $name = trim((string)($item['nev'] ?? ''));
-            $category = trim((string)($item['kategoria'] ?? ''));
-
-            if ($id <= 0 || $name === '' || $category === '') {
-                continue;
-            }
-
-            $items[] = [
-                'id' => $id,
-                'nev' => $name,
-                'kategoria' => $category,
-            ];
-        }
-
-        usort(
-            $items,
-            static fn(array $left, array $right): int => $left['id'] <=> $right['id']
-        );
-
-        return $items;
+        return $this->normalizeRows($decoded);
     }
 
     /**
-     * @param array<int, array{id:int, nev:string, kategoria:string}> $items
+     * @param array<int, array<string, mixed>> $rows
+     * @return array<int, array{id:int, nev:string, kategoria:string}>
      */
-    private function encodeItems(array $items): string
+    private function normalizeRows(array $rows): array
     {
-        return (string)json_encode(
-            array_values($items),
-            JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
-        ) . PHP_EOL;
+        $normalized = [];
+
+        foreach ($rows as $row) {
+            if (!is_array($row)) {
+                continue;
+            }
+
+            $normalizedRow = $this->normalizeRow($row);
+            if ($normalizedRow !== null) {
+                $normalized[] = $normalizedRow;
+            }
+        }
+
+        return $normalized;
+    }
+
+    /**
+     * @param array<string, mixed> $row
+     * @return array{id:int, nev:string, kategoria:string}|null
+     */
+    private function normalizeRow(array $row): ?array
+    {
+        $id = (int)($row['id'] ?? 0);
+        $name = trim((string)($row['nev'] ?? ''));
+        $category = trim((string)($row['kategoria'] ?? ''));
+
+        if ($id <= 0 || $name === '' || $category === '') {
+            return null;
+        }
+
+        return [
+            'id' => $id,
+            'nev' => $name,
+            'kategoria' => $category,
+        ];
     }
 }

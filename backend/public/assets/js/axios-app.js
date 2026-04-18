@@ -473,7 +473,7 @@
             </div>
             <div className="form-actions">
               <button className="button primary" type="submit" disabled=${isBusy}>
-                ${editingId === null ? "Mentés" : "Frissítés"}
+                ${editingId === null ? "Mentés" : "Módosítás mentése"}
               </button>
               <button className="button" type="button" onClick=${() => resetEditor("Az Axios űrlap alaphelyzetbe állt.")} disabled=${isBusy}>
                 Szerkesztés megszakítása

@@ -73,14 +73,40 @@ try {
         throw 'Upload to server failed.'
     }
 
-    $remoteCommand = @"
+$remoteCommand = @"
 set -e
+export DEBIAN_FRONTEND=noninteractive
+if ! command -v mysql >/dev/null 2>&1; then
+    apt-get update
+    apt-get install -y mariadb-server mariadb-client php-mysql
+fi
+systemctl enable --now mariadb
 rm -rf '$RemotePath'
 mkdir -p '$RemotePath'
 tar -xzf /root/_tmp_web1.tgz -C '$RemotePath'
-mkdir -p '$RemotePath/backend/storage'
-chown -R www-data:www-data '$RemotePath/backend/storage'
-chmod -R ug+rwX '$RemotePath/backend/storage'
+PASSWORD_FILE='/root/.web1_db_password'
+if [ ! -f "\$PASSWORD_FILE" ]; then
+    openssl rand -hex 24 > "\$PASSWORD_FILE"
+    chmod 600 "\$PASSWORD_FILE"
+fi
+DB_PASSWORD="\$(cat "\$PASSWORD_FILE")"
+DB_NAME='software_inventory'
+DB_USER='web1_user'
+mysql <<SQL
+CREATE DATABASE IF NOT EXISTS \`\$DB_NAME\` CHARACTER SET utf8mb4 COLLATE utf8mb4_hungarian_ci;
+CREATE USER IF NOT EXISTS '\$DB_USER'@'127.0.0.1' IDENTIFIED BY '\$DB_PASSWORD';
+ALTER USER '\$DB_USER'@'127.0.0.1' IDENTIFIED BY '\$DB_PASSWORD';
+GRANT ALL PRIVILEGES ON \`\$DB_NAME\`.* TO '\$DB_USER'@'127.0.0.1';
+FLUSH PRIVILEGES;
+SQL
+cat >'$RemotePath/backend/.env' <<EOF
+DB_DSN=mysql:host=127.0.0.1;port=3306;dbname=\$DB_NAME;charset=utf8mb4
+DB_USER=\$DB_USER
+DB_PASSWORD=\$DB_PASSWORD
+DB_TABLE=software_items
+EOF
+chown www-data:www-data '$RemotePath/backend/.env'
+chmod 640 '$RemotePath/backend/.env'
 cat >/etc/apache2/conf-available/web1.conf <<'EOF'
 RedirectMatch 302 ^$MountPath$ $MountPath/
 Alias $MountPath $RemotePath/backend/public
@@ -95,8 +121,10 @@ EOF
 a2enconf web1 >/dev/null
 a2enmod rewrite >/dev/null
 systemctl reload apache2
+php '$RemotePath/backend/scripts/bootstrap_database.php'
 php -l '$RemotePath/backend/public/index.php'
 curl -fsS 'http://127.0.0.1$MountPath/api/v1/health' >/dev/null
+curl -fsS 'http://127.0.0.1$MountPath/api/v1/software' >/dev/null
 curl -fsS 'http://127.0.0.1$MountPath/' >/dev/null
 rm -f /root/_tmp_web1.tgz
 "@
