@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="640" viewBox="0 0 960 640" role="img" aria-labelledby="title desc">
+  <title id="title">Böngésző készlet</title>
+  <desc id="desc">Stilizált böngészőablakok.</desc>
+  <rect width="960" height="640" fill="#d7dde4" rx="28" />
+  <rect x="96" y="88" width="768" height="452" rx="22" fill="#ffffff" />
+  <rect x="96" y="88" width="768" height="56" rx="22" fill="#7e8994" />
+  <circle cx="138" cy="116" r="10" fill="#f0c674" />
+  <circle cx="170" cy="116" r="10" fill="#d16d62" />
+  <circle cx="202" cy="116" r="10" fill="#8ac28b" />
+  <rect x="148" y="192" width="276" height="212" rx="20" fill="#4f6fa1" opacity="0.92" />
+  <rect x="454" y="228" width="250" height="176" rx="20" fill="#df7c46" opacity="0.9" />
+  <rect x="518" y="182" width="210" height="34" rx="12" fill="#edf1f4" />
+  <text x="144" y="480" fill="#24313b" font-size="44" font-family="Bahnschrift, Segoe UI, sans-serif">Böngésző készlet</text>
+  <text x="144" y="528" fill="#5a6873" font-size="28" font-family="Bahnschrift, Segoe UI, sans-serif">Modern webes munkához több kliens és kompatibilitási nézet.</text>
+</svg>

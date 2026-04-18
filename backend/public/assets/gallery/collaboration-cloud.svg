@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="640" viewBox="0 0 960 640" role="img" aria-labelledby="title desc">
+  <title id="title">Együttműködési csomag</title>
+  <desc id="desc">Felhő és kommunikációs eszközök plakát.</desc>
+  <rect width="960" height="640" fill="#cfd7df" rx="28" />
+  <circle cx="292" cy="246" r="84" fill="#7c94be" />
+  <circle cx="410" cy="210" r="110" fill="#5c749d" />
+  <circle cx="544" cy="250" r="90" fill="#7c94be" />
+  <rect x="232" y="248" width="406" height="118" rx="58" fill="#5c749d" />
+  <rect x="196" y="412" width="568" height="104" rx="28" fill="#f2f5f7" />
+  <text x="220" y="472" fill="#22303b" font-size="42" font-family="Bahnschrift, Segoe UI, sans-serif">Kommunikáció és videókonferencia</text>
+  <text x="220" y="524" fill="#5a6873" font-size="28" font-family="Bahnschrift, Segoe UI, sans-serif">Teams, Zoom és közös munkafolyamatok támogatása.</text>
+</svg>

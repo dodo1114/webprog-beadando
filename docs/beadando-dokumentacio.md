@@ -41,6 +41,11 @@ A projekt úgy lett kialakítva, hogy:
 - Aktív branch: `main`
 - Távoli collaborator: `duoptikbt95`
 
+### 3.3 Ellenőrző felhasználó
+
+- Login név: `Gamf1234`
+- Jelszó: `1234Gamf`
+
 ## 4. Funkcionális áttekintés
 
 A rendszer hét publikus felületet tartalmaz:

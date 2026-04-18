@@ -5,6 +5,11 @@ Ez a fájl a beadandó végső állapotát foglalja össze.
 ## Kötelező menüpontok
 
 - [x] Kezdőoldal
+- [x] Belépés / Kilépés / Regisztráció
+- [x] Képek
+- [x] Kapcsolat
+- [x] Üzenetek
+- [x] CRUD
 - [x] JavaScript CRUD
 - [x] React CRUD
 - [x] SPA
@@ -14,6 +19,12 @@ Ez a fájl a beadandó végső állapotát foglalja össze.
 
 ## Funkcionális blokkok
 
+- [x] vízszintes menü és reszponzív főoldal
+- [x] két videó és Google térkép a kezdőoldalon
+- [x] bejelentkezett felhasználó megjelenítése a fejlécben
+- [x] képfeltöltés csak bejelentkezett állapotban
+- [x] kapcsolat űrlap kliens- és szerveroldali ellenőrzéssel
+- [x] üzenetek lista fordított időrendben
 - [x] JavaScript CRUD lokális adatszerkezettel
 - [x] React CRUD külön oldalon
 - [x] React SPA két miniappal és közös állapottal
@@ -28,6 +39,7 @@ Ez a fájl a beadandó végső állapotát foglalja össze.
 - [x] MySQL adatbázis-alapú szerveroldali mentés
 - [x] egészségellenőrző API végpont
 - [x] `/var/www/html/web1` deploy célmappa
+- [x] tesztelői felhasználó: `Gamf1234` / `1234Gamf`
 
 ## Beadási kellékek
 
