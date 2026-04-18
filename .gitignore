@@ -3,6 +3,8 @@
 onir-output/
 android/
 dist/
+!react/dist/
+!react/dist/**
 scripts/
 !backend/scripts/
 !backend/scripts/*.php

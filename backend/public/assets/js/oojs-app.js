@@ -87,6 +87,21 @@ class ActivityLogEntry extends BaseComponent {
   }
 }
 
+class BodyMountedStatus extends BaseComponent {
+  constructor() {
+    super("aside", "oojs-floating-status");
+    this.update("Az OOJS felület a document.body.appendChild használatával is épít elemeket.");
+    document.body.appendChild(this.element);
+  }
+
+  update(message) {
+    this.element.innerHTML = `
+      <strong>Body mount aktív</strong>
+      <p>${message}</p>
+    `;
+  }
+}
+
 class WorkbenchApp {
   constructor(root) {
     this.root = root;
@@ -159,6 +174,10 @@ class WorkbenchApp {
     this.mainColumn = new BaseComponent("section", "oojs-main");
     this.sidePanel = new BaseComponent("aside", "panel oojs-side-panel");
     this.layout.append(this.mainColumn.element, this.sidePanel.element);
+
+    if (!this.bodyMountedStatus) {
+      this.bodyMountedStatus = new BodyMountedStatus();
+    }
 
     this.root.append(
       this.pageHeader.element,
@@ -281,6 +300,9 @@ class WorkbenchApp {
       description: message,
     });
     this.state.activityLog = this.state.activityLog.slice(0, 6);
+    if (this.bodyMountedStatus) {
+      this.bodyMountedStatus.update(message);
+    }
   }
 
   toggleSelection(id) {
