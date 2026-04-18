@@ -1,13 +1,15 @@
 :root {
-  --bg: #f6f1e8;
-  --surface: #fffaf2;
-  --surface-strong: #f0e4d2;
-  --text: #1f1a17;
-  --muted: #6d6259;
-  --accent: #bd5f2c;
-  --accent-dark: #8b411b;
-  --border: #d9c8b2;
-  --shadow: 0 18px 40px rgba(72, 47, 27, 0.12);
+  --bg: #cfd3d8;
+  --bg-deep: #aeb4bc;
+  --surface: rgba(245, 246, 248, 0.9);
+  --surface-strong: #d9dde2;
+  --surface-dark: #8b929b;
+  --text: #1e2329;
+  --muted: #59616b;
+  --accent: #4f5660;
+  --accent-strong: #2f353d;
+  --border: #9098a1;
+  --shadow: 0 14px 32px rgba(34, 40, 46, 0.14);
 }
 
 * {
@@ -16,11 +18,13 @@
 
 body {
   margin: 0;
-  font-family: Georgia, "Times New Roman", serif;
-  background:
-    radial-gradient(circle at top left, rgba(189, 95, 44, 0.15), transparent 35%),
-    linear-gradient(180deg, #fbf7f1 0%, var(--bg) 100%);
+  font-family: "Bahnschrift", "Segoe UI", "Trebuchet MS", sans-serif;
   color: var(--text);
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.18) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.18) 1px, transparent 1px),
+    linear-gradient(135deg, var(--bg) 0%, var(--bg-deep) 100%);
+  background-size: 24px 24px, 24px 24px, cover;
 }
 
 a {
@@ -34,35 +38,49 @@ a {
 }
 
 .hero {
-  padding: 32px;
+  position: relative;
+  overflow: hidden;
+  padding: 36px;
   border: 1px solid var(--border);
-  border-radius: 28px;
-  background: rgba(255, 250, 242, 0.92);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0.14)),
+    linear-gradient(180deg, rgba(233, 236, 239, 0.96), rgba(212, 217, 223, 0.92));
   box-shadow: var(--shadow);
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 18px;
+  border: 1px solid rgba(47, 53, 61, 0.18);
+  pointer-events: none;
 }
 
 .eyebrow {
   margin: 0 0 12px;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   font-size: 0.78rem;
-  color: var(--accent-dark);
+  color: var(--accent-strong);
 }
 
 h1,
 h2,
 h3 {
   margin: 0;
+  letter-spacing: -0.03em;
 }
 
 h1 {
-  font-size: clamp(2.2rem, 5vw, 4.4rem);
-  line-height: 0.95;
+  font-size: clamp(2.4rem, 5vw, 4.8rem);
+  line-height: 0.92;
   max-width: 10ch;
+  text-transform: uppercase;
 }
 
 .lead {
-  max-width: 70ch;
+  max-width: 72ch;
   margin: 18px 0 0;
   line-height: 1.7;
   color: var(--muted);
@@ -77,7 +95,7 @@ h1 {
 
 .button-row {
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  margin-top: 24px;
+  margin-top: 28px;
 }
 
 .button {
@@ -86,17 +104,20 @@ h1 {
   justify-content: center;
   min-height: 56px;
   padding: 0 20px;
-  border-radius: 999px;
+  border-radius: 4px;
   border: 1px solid var(--border);
   text-decoration: none;
   font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
   background: var(--surface);
+  box-shadow: inset 0 -2px 0 rgba(47, 53, 61, 0.12);
 }
 
 .button.primary {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #fffaf4;
+  background: linear-gradient(180deg, #656d77 0%, #49515a 100%);
+  border-color: #454c54;
+  color: #f8f9fa;
 }
 
 .section {
@@ -110,9 +131,10 @@ h1 {
 
 .card {
   padding: 22px;
-  border-radius: 22px;
+  border-radius: 6px;
   border: 1px solid var(--border);
-  background: rgba(255, 250, 242, 0.88);
+  background:
+    linear-gradient(180deg, rgba(248, 249, 250, 0.92), rgba(229, 232, 235, 0.88));
   box-shadow: var(--shadow);
 }
 
@@ -130,9 +152,11 @@ h1 {
 .panel {
   margin-top: 28px;
   padding: 24px;
-  border-radius: 24px;
+  border-radius: 6px;
   border: 1px solid var(--border);
-  background: rgba(255, 250, 242, 0.86);
+  background:
+    linear-gradient(180deg, rgba(244, 246, 247, 0.94), rgba(221, 225, 229, 0.9));
+  box-shadow: var(--shadow);
 }
 
 .panel ul {
@@ -152,7 +176,9 @@ h1 {
 .back-link {
   text-decoration: none;
   font-weight: 700;
-  color: var(--accent-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent-strong);
 }
 
 .status {
@@ -160,10 +186,13 @@ h1 {
   align-items: center;
   gap: 10px;
   padding: 8px 14px;
-  border-radius: 999px;
+  border-radius: 4px;
   background: var(--surface-strong);
-  color: var(--accent-dark);
+  border: 1px solid var(--border);
+  color: var(--accent-strong);
   font-size: 0.92rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
 .placeholder {
@@ -177,10 +206,12 @@ h1 {
   display: block;
   font-size: 1.2rem;
   margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 code {
-  font-family: "Courier New", monospace;
+  font-family: "Consolas", "Courier New", monospace;
 }
 
 @media (max-width: 640px) {
@@ -193,6 +224,5 @@ code {
   .panel,
   .card {
     padding: 20px;
-    border-radius: 20px;
   }
 }
