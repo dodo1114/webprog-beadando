@@ -1,26 +1,25 @@
 # Assignment Checklist
 
-Ez a fajl a beadando fokozatos felepitesehez keszul.
+Ez a fájl a beadandó fokozatos felépítéséhez készült.
 
-## Elso kor
+## Első kör
 
-- repository tiszta indulasa
-- README es alap projektleiras
-- kezdooldal a kotelezo menu pontokkal
-- placeholder oldalak minden fo reszhez
-- minimalis backend scaffold
+- repository tiszta indulása
+- README és alap projektleírás
+- kezdőoldal a kötelező menüpontokkal
+- placeholder oldalak minden fő részhez
+- minimális backend scaffold
 
-## Kovetkezo implementacios blokkok
+## Következő implementációs blokkok
 
-- JavaScript CRUD
-- React CRUD
 - SPA
-- Fetch API CRUD
 - Axios CRUD
-- OOJS resz
-- deploy es dokumentacio
+- OOJS rész
+- végső dokumentáció és screenshotok
 
-## Elkeszult blokkok
+## Elkészült blokkok
 
 - JavaScript CRUD
 - React CRUD
+- PHP CRUD API
+- Fetch API CRUD

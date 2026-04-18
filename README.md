@@ -1,44 +1,40 @@
-# Webprog Beadando
+# Webprog Beadandó
 
-Ez a repository a Webprogramozas 1 beadando kozos, ketfos megvalositasahoz keszul.
+Ez a repository a Webprogramozás 1 beadandó közös, kétfős megvalósításához készül.
 
-## Aktualis allapot
+## Aktuális állapot
 
-Ez az elso tiszta indulasi commit. A repository most a beadando alapstrukturajat tartalmazza:
+A projekt jelenleg az alábbi működő blokkokat tartalmazza:
 
-- kezdooldal a kotelezo menupontokkal
-- mukodo JavaScript CRUD es React CRUD oldal a szoftverleltar adatkorevel
-- kulon oldalak a SPA, Fetch API, Axios es OOJS reszekhez
-- minimalis PHP backend-vaz a kesobbi szerveroldali CRUD-hoz
-- dokumentacios fajlok a feladattervhez es a GitHub munkamegosztashoz
+- kezdőoldal a kötelező menüpontokkal
+- működő JavaScript CRUD oldal a szoftverleltár adatkörével
+- működő React CRUD oldal ugyanarra az adatkészletre
+- működő PHP CRUD API JSON-alapú szerveroldali tárolóval
+- működő Fetch API oldal, amely a PHP backenddel kommunikál
+- deploy script a `krakovszki.hu/web1` környezethez
 
-## Projekt struktura
+## Projektstruktúra
 
 - `backend/public/index.html`
-  kezdo oldal a beadando navigaciojaval
+  kezdőoldal a beadandó navigációjával
 - `backend/public/javascript.html`
-  JavaScript CRUD helye
+  kliensoldali JavaScript CRUD
 - `backend/public/react.html`
-  React CRUD helye
-- `backend/public/spa.html`
-  SPA resz helye
+  React CRUD
 - `backend/public/fetchapi.html`
-  Fetch API resz helye
-- `backend/public/axios.html`
-  Axios resz helye
-- `backend/public/oojs.html`
-  OOJS resz helye
+  Fetch API + PHP CRUD kapcsolat
 - `backend/public/index.php`
-  minimalis API belepesi pont
+  API belépési pont
+- `backend/src/SoftwareRepository.php`
+  fájlalapú szerveroldali adattároló
 - `docs/assignment-checklist.md`
   feladatblokk lista
 - `docs/github-teamwork.md`
-  ketfos GitHub workflow
+  kétfős GitHub workflow
 
-## Kovetkezo lepesek
+## Következő lépések
 
-1. vegleges adatkeszlet rogzitese az 1-11 szoftverleltar alapjan
-2. SPA kiepitese
-3. Fetch API, Axios es OOJS reszek implementalasa
-4. PHP + MySQL CRUD vegpontok bekotese
-5. dokumentacio, deploy es vegso beadando csomag
+1. SPA megépítése két miniappal
+2. Axios oldal elkészítése a meglévő backendhez
+3. OOJS rész elkészítése
+4. dokumentáció, screenshotok és végső ellenőrzés

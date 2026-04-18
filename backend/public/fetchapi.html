@@ -10,21 +10,87 @@
     <main class="page">
       <header class="page-header">
         <a class="back-link" href="./index.html">Vissza a főmenübe</a>
-        <span class="status">API scaffold kész</span>
+        <span class="status">Fetch API aktív</span>
       </header>
-      <section class="panel">
-        <h1>Fetch API rész</h1>
+
+      <section class="hero">
+        <p class="eyebrow">Szerveroldali adatkezelés</p>
+        <h1>Fetch API CRUD</h1>
         <p class="lead">
-          A PHP backend minimális belépési pontja már létre van hozva. A health check:
-          <code>GET /api/v1/health</code>
+          Ez az oldal már a PHP API-val kommunikál. A lista, a felvétel, a szerkesztés és a törlés
+          most a szerveroldali JSON adattárolót használja a <code>GET /api/v1/software</code> végponton keresztül.
         </p>
-      </section>
-      <section class="panel placeholder">
-        <div>
-          <strong>Fetch alapú CRUD következik</strong>
-          <p>A következő körben ide kerül a listázás, felvétel, módosítás és törlés felülete.</p>
+        <div class="button-row">
+          <a class="button" href="./javascript.html">JavaScript CRUD</a>
+          <a class="button primary" href="./react.html">React CRUD</a>
         </div>
       </section>
+
+      <section class="section card-grid" id="fetch-summary"></section>
+
+      <section class="panel js-layout">
+        <section class="js-main">
+          <div class="js-toolbar">
+            <div class="field-group">
+              <label class="field-label" for="fetchSearchInput">Keresés névre vagy kategóriára</label>
+              <input
+                id="fetchSearchInput"
+                class="text-input"
+                type="search"
+                placeholder="Pl. böngésző vagy Visual Studio Code"
+              />
+            </div>
+            <div class="toolbar-actions">
+              <button class="button" id="reloadDataButton" type="button">Lista frissítése</button>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Program neve</th>
+                  <th>Kategória</th>
+                  <th>Műveletek</th>
+                </tr>
+              </thead>
+              <tbody id="fetchTableBody"></tbody>
+            </table>
+          </div>
+          <p class="muted-line" id="fetchTableMeta"></p>
+        </section>
+
+        <aside class="panel js-side-panel">
+          <p class="eyebrow">Űrlap</p>
+          <h2 id="fetchFormTitle">Új szoftver felvétele</h2>
+          <form id="fetchSoftwareForm" class="stack-form">
+            <div class="field-group">
+              <label class="field-label" for="fetchNameInput">Szoftver neve</label>
+              <input id="fetchNameInput" name="nev" class="text-input" type="text" maxlength="255" required />
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="fetchCategoryInput">Kategória</label>
+              <input
+                id="fetchCategoryInput"
+                name="kategoria"
+                class="text-input"
+                type="text"
+                maxlength="255"
+                required
+              />
+            </div>
+            <div class="form-actions">
+              <button class="button primary" id="fetchSubmitButton" type="submit">Mentés</button>
+              <button class="button" id="fetchCancelEditButton" type="button">Szerkesztés megszakítása</button>
+            </div>
+          </form>
+          <p class="muted-line" id="fetchFeedbackMessage">
+            A Fetch API oldal közvetlenül a PHP backenddel dolgozik.
+          </p>
+        </aside>
+      </section>
     </main>
+    <script src="./assets/js/fetch-app.js" type="module"></script>
   </body>
 </html>

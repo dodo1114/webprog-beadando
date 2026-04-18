@@ -1,22 +1,22 @@
 # GitHub Teamwork
 
-Ez a repository ketfos beadandohoz keszul.
+Ez a repository kétfős beadandóhoz készül.
 
-## Alapszabalyok
+## Alapszabályok
 
-- a `main` mindig stabil allapot maradjon
-- minden nagyobb blokk kulon branchre menjen
-- a ket csapattag kulon Git authorral commitoljon
-- a commitok legyenek ertelmesen tagoltak
+- a `main` mindig stabil állapot maradjon
+- minden nagyobb blokk külön branchre menjen
+- a két csapattag külön Git authorral commitoljon
+- a commitok legyenek értelmesen tagoltak
 
-## Javasolt felosztas
+## Javasolt felosztás
 
-- Krako: JavaScript, backend, deploy
-- kollega: React, SPA, Axios, dokumentacio
-- kozos: indexoldal, OOJS, vegso ellenorzes
+- Krako: JavaScript, backend, deploy, Fetch API
+- kolléga: React, SPA, Axios, dokumentáció
+- közös: indexoldal, OOJS, végső ellenőrzés
 
-## Minimum cel
+## Minimum cél
 
 - publikus repository
-- legalabb 5 ertelmes commit
-- latszodjon mindket contributor
+- legalább 5 értelmes commit
+- látszódjon mindkét contributor

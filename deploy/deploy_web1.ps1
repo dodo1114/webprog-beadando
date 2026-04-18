@@ -78,6 +78,9 @@ set -e
 rm -rf '$RemotePath'
 mkdir -p '$RemotePath'
 tar -xzf /root/_tmp_web1.tgz -C '$RemotePath'
+mkdir -p '$RemotePath/backend/storage'
+chown -R www-data:www-data '$RemotePath/backend/storage'
+chmod -R ug+rwX '$RemotePath/backend/storage'
 cat >/etc/apache2/conf-available/web1.conf <<'EOF'
 RedirectMatch 302 ^$MountPath$ $MountPath/
 Alias $MountPath $RemotePath/backend/public

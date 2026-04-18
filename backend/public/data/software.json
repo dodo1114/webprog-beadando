@@ -1,14 +1,13 @@
 [
   { "id": 1, "nev": "Microsoft Word", "kategoria": "Irodai program" },
-  { "id": 2, "nev": "Microsoft Excel", "kategoria": "Irodai program" },
+  { "id": 2, "nev": "Microsoft Excel", "kategoria": "Táblázatkezelő" },
   { "id": 3, "nev": "Microsoft PowerPoint", "kategoria": "Prezentációs szoftver" },
   { "id": 4, "nev": "Google Chrome", "kategoria": "Böngésző" },
   { "id": 5, "nev": "Mozilla Firefox", "kategoria": "Böngésző" },
   { "id": 6, "nev": "Visual Studio Code", "kategoria": "Fejlesztői eszköz" },
   { "id": 7, "nev": "Notepad++", "kategoria": "Szövegszerkesztő" },
-  { "id": 8, "nev": "Adobe Acrobat Reader", "kategoria": "Dokumentumkezelő" },
+  { "id": 8, "nev": "Adobe Acrobat Reader", "kategoria": "PDF-kezelő" },
   { "id": 9, "nev": "VLC Media Player", "kategoria": "Médialejátszó" },
   { "id": 10, "nev": "7-Zip", "kategoria": "Tömörítő program" },
-  { "id": 11, "nev": "Microsoft Teams", "kategoria": "Kommunikációs szoftver" },
-  { "id": 12, "nev": "Zoom", "kategoria": "Videókonferencia" }
+  { "id": 11, "nev": "Microsoft Teams", "kategoria": "Kommunikációs szoftver" }
 ]
