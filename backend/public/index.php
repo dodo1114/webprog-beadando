@@ -3,8 +3,6 @@
 declare(strict_types=1);
 
 use App\SoftwareRepository;
-use JsonException;
-use RuntimeException;
 
 require_once dirname(__DIR__) . '/src/SoftwareRepository.php';
 
