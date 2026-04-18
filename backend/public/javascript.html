@@ -9,17 +9,17 @@
   <body>
     <main class="page">
       <header class="page-header">
-        <a class="back-link" href="./index.html">Vissza a fomenube</a>
-        <span class="status">JavaScript CRUD aktiv</span>
+        <a class="back-link" href="./index.html">Vissza a főmenübe</a>
+        <span class="status">JavaScript CRUD aktív</span>
       </header>
 
       <section class="hero">
-        <p class="eyebrow">Lokalis adatkezeles</p>
+        <p class="eyebrow">Lokális adatkezelés</p>
         <h1>JavaScript CRUD</h1>
         <p class="lead">
-          Ez az oldal a szoftverleltar szoftverlistajat kezeli teljesen kliensoldalon.
-          Az alapadatok JSON fajlbol jonnek, utana a modositasok a bongeszo
-          localStorage-jaban maradnak meg.
+          Ez az oldal a szoftverleltár szoftverlistáját kezeli teljesen kliensoldalon.
+          Az alapadatok JSON fájlból jönnek, utána a módosítások a böngésző
+          localStorage-jában maradnak meg.
         </p>
       </section>
 
@@ -29,11 +29,11 @@
         <section class="js-main">
           <div class="js-toolbar">
             <div class="field-group">
-              <label class="field-label" for="searchInput">Kereses nevre vagy kategoriara</label>
+              <label class="field-label" for="searchInput">Keresés névre vagy kategóriára</label>
               <input id="searchInput" class="text-input" type="search" placeholder="Pl. Visual Studio Code vagy Office" />
             </div>
             <div class="toolbar-actions">
-              <button class="button primary" id="resetDataButton" type="button">Alapadatok visszaallitasa</button>
+              <button class="button primary" id="resetDataButton" type="button">Alapadatok visszaállítása</button>
             </div>
           </div>
 
@@ -43,8 +43,8 @@
                 <tr>
                   <th>ID</th>
                   <th>Program neve</th>
-                  <th>Kategoria</th>
-                  <th>Muveletek</th>
+                  <th>Kategória</th>
+                  <th>Műveletek</th>
                 </tr>
               </thead>
               <tbody id="softwareTableBody"></tbody>
@@ -54,23 +54,23 @@
         </section>
 
         <aside class="panel js-side-panel">
-          <p class="eyebrow">Urlap</p>
-          <h2 id="formTitle">Uj szoftver felvetele</h2>
+          <p class="eyebrow">Űrlap</p>
+          <h2 id="formTitle">Új szoftver felvétele</h2>
           <form id="softwareForm" class="stack-form">
             <div class="field-group">
               <label class="field-label" for="nameInput">Szoftver neve</label>
               <input id="nameInput" name="nev" class="text-input" type="text" maxlength="255" required />
             </div>
             <div class="field-group">
-              <label class="field-label" for="categoryInput">Kategoria</label>
+              <label class="field-label" for="categoryInput">Kategória</label>
               <input id="categoryInput" name="kategoria" class="text-input" type="text" maxlength="255" required />
             </div>
             <div class="form-actions">
               <button class="button primary" id="submitButton" type="submit">Mentés</button>
-              <button class="button" id="cancelEditButton" type="button">Szerkesztes megszakitasa</button>
+              <button class="button" id="cancelEditButton" type="button">Szerkesztés megszakítása</button>
             </div>
           </form>
-          <p class="muted-line" id="feedbackMessage">Valassz ki egy sort szerkeszteshez, vagy vigyel fel uj elemet.</p>
+          <p class="muted-line" id="feedbackMessage">Válassz ki egy sort szerkesztéshez, vagy vigyél fel új elemet.</p>
         </aside>
       </section>
     </main>

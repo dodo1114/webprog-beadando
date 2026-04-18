@@ -25,7 +25,7 @@ const state = {
 async function bootstrap() {
   const response = await fetch(DATA_URL, { cache: "no-store" });
   if (!response.ok) {
-    throw new Error("Nem sikerult betolteni a software.json adatfajlt.");
+    throw new Error("Nem sikerült betölteni a software.json adatfájlt.");
   }
 
   const seedItems = await response.json();
@@ -51,7 +51,7 @@ function bindEvents() {
     const category = elements.categoryInput.value.trim();
 
     if (!name || !category) {
-      setFeedback("A nev es a kategoria kitoltese kotelezo.");
+      setFeedback("A név és a kategória kitöltése kötelező.");
       return;
     }
 
@@ -62,12 +62,12 @@ function bindEvents() {
         nev: name,
         kategoria: category,
       });
-      setFeedback(`Uj szoftver rogzitve: ${name}.`);
+      setFeedback(`Új szoftver rögzítve: ${name}.`);
     } else {
       state.items = state.items.map((item) =>
         item.id === state.selectedId ? { ...item, nev: name, kategoria: category } : item
       );
-      setFeedback(`Szoftver frissitve: ${name}.`);
+      setFeedback(`Szoftver frissítve: ${name}.`);
     }
 
     persist();
@@ -84,7 +84,7 @@ function bindEvents() {
     state.items = structuredClone(state.seedItems);
     persist();
     resetForm();
-    setFeedback("Az alapadatok vissza lettek allitva.");
+    setFeedback("Az alapadatok vissza lettek állítva.");
     render();
   });
 
@@ -102,7 +102,7 @@ function bindEvents() {
       state.selectedId = item.id;
       elements.nameInput.value = item.nev;
       elements.categoryInput.value = item.kategoria;
-      setFeedback(`Szerkesztes alatt: ${item.nev}.`);
+      setFeedback(`Szerkesztés alatt: ${item.nev}.`);
       render();
       return;
     }
@@ -121,7 +121,7 @@ function bindEvents() {
         resetForm();
       }
 
-      setFeedback(`Torolve: ${item.nev}.`);
+      setFeedback(`Törölve: ${item.nev}.`);
       render();
     }
   });
@@ -149,24 +149,24 @@ function renderSummary(filteredItems) {
 
   const cards = [
     {
-      label: "Lathato elemek",
+      label: "Látható elemek",
       value: filteredItems.length,
-      detail: "Aktualis keresesi allapot szerint",
+      detail: "Aktuális keresési állapot szerint",
     },
     {
-      label: "Osszes szoftver",
+      label: "Összes szoftver",
       value: state.items.length,
-      detail: "LocalStorage-ben tarolt aktualis lista",
+      detail: "LocalStorage-ben tárolt aktuális lista",
     },
     {
-      label: "Kategoriak",
+      label: "Kategóriák",
       value: categoryCount,
-      detail: "Kulonbozo kategoriak a szurt listaban",
+      detail: "Különböző kategóriák a szűrt listában",
     },
     {
-      label: "Szerkesztes alatt",
+      label: "Szerkesztés alatt",
       value: selectedItem ? selectedItem.nev : "nincs",
-      detail: selectedItem ? selectedItem.kategoria : "Uj rekord felvetel mod",
+      detail: selectedItem ? selectedItem.kategoria : "Új rekord felvétel mód",
     },
   ];
 
@@ -189,12 +189,12 @@ function renderTable(filteredItems) {
       <tr>
         <td colspan="4">
           <div class="empty-state-box">
-            Nincs talalat a jelenlegi szuresre.
+            Nincs találat a jelenlegi szűrésre.
           </div>
         </td>
       </tr>
     `;
-    elements.tableMeta.textContent = "0 rekord lathato.";
+    elements.tableMeta.textContent = "0 rekord látható.";
     return;
   }
 
@@ -209,8 +209,8 @@ function renderTable(filteredItems) {
           <td><span class="table-badge">${item.kategoria}</span></td>
           <td>
             <div class="row-actions">
-              <button class="mini-button" type="button" data-action="edit" data-id="${item.id}">Szerkesztes</button>
-              <button class="mini-button danger" type="button" data-action="delete" data-id="${item.id}">Torles</button>
+              <button class="mini-button" type="button" data-action="edit" data-id="${item.id}">Szerkesztés</button>
+              <button class="mini-button danger" type="button" data-action="delete" data-id="${item.id}">Törlés</button>
             </div>
           </td>
         </tr>
@@ -218,12 +218,12 @@ function renderTable(filteredItems) {
     )
     .join("");
 
-  elements.tableMeta.textContent = `${filteredItems.length} rekord lathato, ${state.items.length} rekord tarolva.`;
+  elements.tableMeta.textContent = `${filteredItems.length} rekord látható, ${state.items.length} rekord tárolva.`;
 }
 
 function renderFormState() {
   const selectedItem = state.items.find((item) => item.id === state.selectedId);
-  elements.formTitle.textContent = selectedItem ? "Szoftver szerkesztese" : "Uj szoftver felvetele";
+  elements.formTitle.textContent = selectedItem ? "Szoftver szerkesztése" : "Új szoftver felvétele";
 }
 
 function resetForm() {
@@ -241,12 +241,12 @@ function setFeedback(message) {
 
 bootstrap().catch((error) => {
   console.error(error);
-  elements.feedbackMessage.textContent = "Hiba tortent az adatok betoltesekor.";
+  elements.feedbackMessage.textContent = "Hiba történt az adatok betöltésekor.";
   elements.summary.innerHTML = `
     <article class="card summary-card">
       <p class="summary-label">Hiba</p>
-      <strong class="summary-value">Adatbetoltes sikertelen</strong>
-      <p>Ellenorizd a software.json fajlt.</p>
+      <strong class="summary-value">Adatbetöltés sikertelen</strong>
+      <p>Ellenőrizd a software.json fájlt.</p>
     </article>
   `;
 });
