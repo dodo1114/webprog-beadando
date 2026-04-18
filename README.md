@@ -13,6 +13,7 @@ A projekt jelenleg az alábbi működő blokkokat tartalmazza:
 - működő PHP CRUD API JSON-alapú szerveroldali tárolóval
 - működő Fetch API oldal, amely a PHP backenddel kommunikál
 - működő Axios CRUD oldal React komponensekkel és Axios klienssel
+- működő OOJS műhely class alapú DOM-építéssel és telepítési profil szerkesztővel
 - deploy script a `krakovszki.hu/web1` környezethez
 
 ## Projektstruktúra
@@ -29,6 +30,8 @@ A projekt jelenleg az alábbi működő blokkokat tartalmazza:
   Fetch API + PHP CRUD kapcsolat
 - `backend/public/axios.html`
   React + Axios kliens ugyanarra a PHP CRUD backendre
+- `backend/public/oojs.html`
+  objektumorientált JavaScript műhely class alapú DOM-építéssel
 - `backend/public/index.php`
   API belépési pont
 - `backend/src/SoftwareRepository.php`
@@ -40,5 +43,4 @@ A projekt jelenleg az alábbi működő blokkokat tartalmazza:
 
 ## Következő lépések
 
-1. OOJS rész elkészítése
-2. dokumentáció, screenshotok és végső ellenőrzés
+1. dokumentáció, screenshotok és végső ellenőrzés

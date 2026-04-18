@@ -12,7 +12,6 @@ Ez a fájl a beadandó fokozatos felépítéséhez készült.
 
 ## Következő implementációs blokkok
 
-- OOJS rész
 - végső dokumentáció és screenshotok
 
 ## Elkészült blokkok
@@ -23,3 +22,4 @@ Ez a fájl a beadandó fokozatos felépítéséhez készült.
 - PHP CRUD API
 - Fetch API CRUD
 - Axios CRUD
+- OOJS rész
