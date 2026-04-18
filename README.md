@@ -12,6 +12,7 @@ A projekt jelenleg az alábbi működő blokkokat tartalmazza:
 - működő React-alapú SPA két miniappal és közös kliensoldali állapottal
 - működő PHP CRUD API JSON-alapú szerveroldali tárolóval
 - működő Fetch API oldal, amely a PHP backenddel kommunikál
+- működő Axios CRUD oldal React komponensekkel és Axios klienssel
 - deploy script a `krakovszki.hu/web1` környezethez
 
 ## Projektstruktúra
@@ -26,6 +27,8 @@ A projekt jelenleg az alábbi működő blokkokat tartalmazza:
   két miniappos SPA közös állapottal
 - `backend/public/fetchapi.html`
   Fetch API + PHP CRUD kapcsolat
+- `backend/public/axios.html`
+  React + Axios kliens ugyanarra a PHP CRUD backendre
 - `backend/public/index.php`
   API belépési pont
 - `backend/src/SoftwareRepository.php`
@@ -37,6 +40,5 @@ A projekt jelenleg az alábbi működő blokkokat tartalmazza:
 
 ## Következő lépések
 
-1. Axios oldal elkészítése a meglévő backendhez
-2. OOJS rész elkészítése
-3. dokumentáció, screenshotok és végső ellenőrzés
+1. OOJS rész elkészítése
+2. dokumentáció, screenshotok és végső ellenőrzés

@@ -8,16 +8,17 @@
   </head>
   <body>
     <main class="page">
-      <header class="page-header">
-        <a class="back-link" href="./index.html">Vissza a főmenübe</a>
-        <span class="status">Következő fejlesztési blokk</span>
-      </header>
-      <section class="panel placeholder">
-        <div>
-          <strong>Axios + React következik</strong>
-          <p>Itt készül el a meglévő PHP CRUD backend Reactes, Axios-alapú kliensváltozata.</p>
-        </div>
-      </section>
+      <div id="axios-root"></div>
+      <noscript>
+        <section class="panel">
+          <strong>Az Axios CRUD használatához JavaScript szükséges.</strong>
+        </section>
+      </noscript>
     </main>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/htm@3.1.1/dist/htm.umd.js"></script>
+    <script src="./assets/js/axios-app.js"></script>
   </body>
 </html>
