@@ -1,0 +1,17 @@
+#!/bin/sh
+
+CURRENT_BRANCH="$(git symbolic-ref --quiet --short HEAD 2>/dev/null || true)"
+
+if [ "$CURRENT_BRANCH" != "main" ]; then
+  exit 0
+fi
+
+SCRIPT_PATH="$0"
+SCRIPT_DIR="${SCRIPT_PATH%/*}"
+if [ "$SCRIPT_DIR" = "$SCRIPT_PATH" ]; then
+  SCRIPT_DIR="."
+fi
+REPO_ROOT="$(CDPATH= cd -- "$SCRIPT_DIR/.." && pwd)"
+
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$REPO_ROOT/deploy/deploy_web1.ps1"
+exit $?

@@ -1,0 +1,108 @@
+param(
+    [string]$ServerHost = 'krakovszki.hu',
+    [string]$User = 'root',
+    [string]$RemotePath = '/var/www/html/web1',
+    [string]$MountPath = '/web1',
+    [string]$KeyPath = ''
+)
+
+Set-StrictMode -Version Latest
+$ErrorActionPreference = 'Stop'
+
+function Resolve-ToolPath {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Name,
+        [string[]]$Fallbacks = @()
+    )
+
+    $tool = Get-Command $Name -ErrorAction SilentlyContinue
+    if ($tool) {
+        return $tool.Source
+    }
+
+    foreach ($candidate in $Fallbacks) {
+        if ($candidate -and (Test-Path -LiteralPath $candidate)) {
+            return (Resolve-Path -LiteralPath $candidate).Path
+        }
+    }
+
+    throw "Required tool is missing: $Name"
+}
+
+function Resolve-KeyPath {
+    param(
+        [string]$RequestedKeyPath
+    )
+
+    if ($RequestedKeyPath -and (Test-Path -LiteralPath $RequestedKeyPath)) {
+        return (Resolve-Path -LiteralPath $RequestedKeyPath).Path
+    }
+
+    $startupPath = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs\Startup'
+    $matches = @(Get-ChildItem -LiteralPath $startupPath -Filter '*.ppk' -File -ErrorAction SilentlyContinue)
+
+    if ($matches.Count -eq 1) {
+        return $matches[0].FullName
+    }
+
+    throw 'SSH key not found. Pass -KeyPath or place exactly one .ppk file in Startup.'
+}
+
+$repoRoot = Split-Path -Parent $PSScriptRoot
+$gitPath = Resolve-ToolPath -Name 'git' -Fallbacks @(
+    (Join-Path $repoRoot '.tools\MinGit\cmd\git.exe')
+)
+$pscpPath = Resolve-ToolPath -Name 'pscp'
+$plinkPath = Resolve-ToolPath -Name 'plink'
+$resolvedKey = Resolve-KeyPath -RequestedKeyPath $KeyPath
+$asciiKey = Join-Path $repoRoot '_tmp_server_key.ppk'
+$archivePath = Join-Path $repoRoot '_tmp_web1.tgz'
+$target = "$User@$ServerHost"
+
+Copy-Item -LiteralPath $resolvedKey -Destination $asciiKey -Force
+
+try {
+    & $gitPath -C $repoRoot archive --format=tar.gz --output $archivePath HEAD
+    if ($LASTEXITCODE -ne 0) {
+        throw 'git archive failed.'
+    }
+
+    & $pscpPath -batch -i $asciiKey $archivePath "${target}:/root/_tmp_web1.tgz"
+    if ($LASTEXITCODE -ne 0) {
+        throw 'Upload to server failed.'
+    }
+
+    $remoteCommand = @"
+set -e
+rm -rf '$RemotePath'
+mkdir -p '$RemotePath'
+tar -xzf /root/_tmp_web1.tgz -C '$RemotePath'
+cat >/etc/apache2/conf-available/web1.conf <<'EOF'
+RedirectMatch 302 ^$MountPath$ $MountPath/
+Alias $MountPath $RemotePath/backend/public
+<Directory $RemotePath/backend/public>
+    Options FollowSymLinks
+    AllowOverride None
+    Require all granted
+    DirectoryIndex index.html index.php
+    FallbackResource $MountPath/index.php
+</Directory>
+EOF
+a2enconf web1 >/dev/null
+a2enmod rewrite >/dev/null
+systemctl reload apache2
+php -l '$RemotePath/backend/public/index.php'
+curl -fsS 'http://127.0.0.1$MountPath/api/v1/health' >/dev/null
+curl -fsS 'http://127.0.0.1$MountPath/' >/dev/null
+rm -f /root/_tmp_web1.tgz
+"@
+
+    & $plinkPath -batch -i $asciiKey $target $remoteCommand
+    if ($LASTEXITCODE -ne 0) {
+        throw 'Remote deployment failed.'
+    }
+} finally {
+    Remove-Item -LiteralPath $archivePath -ErrorAction SilentlyContinue
+    Remove-Item -LiteralPath $asciiKey -ErrorAction SilentlyContinue
+}

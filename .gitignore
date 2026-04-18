@@ -1,6 +1,5 @@
 .tools/
 .assignment_docs/
-.githooks/
 onir-output/
 android/
 dist/
@@ -21,3 +20,6 @@ backend/public/play.state.js
 backend/public/teszt.html
 backend/public/teszt/
 docs/onir-outlook-automation.md
+!.githooks/
+.githooks/*
+!.githooks/post-push
