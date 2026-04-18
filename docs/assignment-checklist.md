@@ -1,25 +1,37 @@
 # Assignment Checklist
 
-Ez a fájl a beadandó fokozatos felépítéséhez készült.
+Ez a fájl a beadandó végső állapotát foglalja össze.
 
-## Első kör
+## Kötelező menüpontok
 
-- repository tiszta indulása
-- README és alap projektleírás
-- kezdőoldal a kötelező menüpontokkal
-- placeholder oldalak minden fő részhez
-- minimális backend scaffold
+- [x] Kezdőoldal
+- [x] JavaScript CRUD
+- [x] React CRUD
+- [x] SPA
+- [x] Fetch API
+- [x] Axios
+- [x] OOJS
 
-## Következő implementációs blokkok
+## Funkcionális blokkok
 
-- végső dokumentáció és screenshotok
+- [x] JavaScript CRUD lokális adatszerkezettel
+- [x] React CRUD külön oldalon
+- [x] React SPA két miniappal és közös állapottal
+- [x] PHP CRUD API
+- [x] Fetch API kliens a backendhez kötve
+- [x] Axios kliens a backendhez kötve
+- [x] OOJS rész class, extends, super és `document.body.appendChild` használattal
 
-## Elkészült blokkok
+## Adatkezelés és hosztolás
 
-- JavaScript CRUD
-- React CRUD
-- SPA
-- PHP CRUD API
-- Fetch API CRUD
-- Axios CRUD
-- OOJS rész
+- [x] élő szerveres futás
+- [x] MySQL adatbázis-alapú szerveroldali mentés
+- [x] egészségellenőrző API végpont
+- [x] `/var/www/html/web1` deploy célmappa
+
+## Beadási kellékek
+
+- [x] kétfős GitHub history
+- [x] részletes dokumentáció a `docs/beadando-dokumentacio.md` fájlban
+- [x] screenshot-készlet a `docs/screenshots` mappában
+- [ ] végső PDF export a beadáshoz
