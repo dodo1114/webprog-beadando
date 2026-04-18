@@ -10,14 +10,70 @@
     <main class="page">
       <header class="page-header">
         <a class="back-link" href="./index.html">Vissza a fomenube</a>
-        <span class="status">Scaffold fazis</span>
+        <span class="status">JavaScript CRUD aktiv</span>
       </header>
-      <section class="panel placeholder">
-        <div>
-          <strong>JavaScript CRUD helye</strong>
-          <p>Itt fogjuk megcsinalni a lokalis, kliensoldali CRUD feluletet az 1-11 szoftverleltar adataihoz.</p>
-        </div>
+
+      <section class="hero">
+        <p class="eyebrow">Lokalis adatkezeles</p>
+        <h1>JavaScript CRUD</h1>
+        <p class="lead">
+          Ez az oldal a szoftverleltar szoftverlistajat kezeli teljesen kliensoldalon.
+          Az alapadatok JSON fajlbol jonnek, utana a modositasok a bongeszo
+          localStorage-jaban maradnak meg.
+        </p>
+      </section>
+
+      <section class="section card-grid" id="js-summary"></section>
+
+      <section class="panel js-layout">
+        <section class="js-main">
+          <div class="js-toolbar">
+            <div class="field-group">
+              <label class="field-label" for="searchInput">Kereses nevre vagy kategoriara</label>
+              <input id="searchInput" class="text-input" type="search" placeholder="Pl. Visual Studio Code vagy Office" />
+            </div>
+            <div class="toolbar-actions">
+              <button class="button primary" id="resetDataButton" type="button">Alapadatok visszaallitasa</button>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Program neve</th>
+                  <th>Kategoria</th>
+                  <th>Muveletek</th>
+                </tr>
+              </thead>
+              <tbody id="softwareTableBody"></tbody>
+            </table>
+          </div>
+          <p class="muted-line" id="tableMeta"></p>
+        </section>
+
+        <aside class="panel js-side-panel">
+          <p class="eyebrow">Urlap</p>
+          <h2 id="formTitle">Uj szoftver felvetele</h2>
+          <form id="softwareForm" class="stack-form">
+            <div class="field-group">
+              <label class="field-label" for="nameInput">Szoftver neve</label>
+              <input id="nameInput" name="nev" class="text-input" type="text" maxlength="255" required />
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="categoryInput">Kategoria</label>
+              <input id="categoryInput" name="kategoria" class="text-input" type="text" maxlength="255" required />
+            </div>
+            <div class="form-actions">
+              <button class="button primary" id="submitButton" type="submit">Mentés</button>
+              <button class="button" id="cancelEditButton" type="button">Szerkesztes megszakitasa</button>
+            </div>
+          </form>
+          <p class="muted-line" id="feedbackMessage">Valassz ki egy sort szerkeszteshez, vagy vigyel fel uj elemet.</p>
+        </aside>
       </section>
     </main>
+    <script src="./assets/js/javascript-app.js" type="module"></script>
   </body>
 </html>
