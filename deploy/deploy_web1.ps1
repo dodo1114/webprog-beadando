@@ -85,24 +85,22 @@ rm -rf '$RemotePath'
 mkdir -p '$RemotePath'
 tar -xzf /root/_tmp_web1.tgz -C '$RemotePath'
 PASSWORD_FILE='/root/.web1_db_password'
-if [ ! -f "\$PASSWORD_FILE" ]; then
-    openssl rand -hex 24 > "\$PASSWORD_FILE"
-    chmod 600 "\$PASSWORD_FILE"
+if [ ! -f "`$PASSWORD_FILE" ]; then
+    openssl rand -hex 24 > "`$PASSWORD_FILE"
+    chmod 600 "`$PASSWORD_FILE"
 fi
-DB_PASSWORD="\$(cat "\$PASSWORD_FILE")"
-DB_NAME='software_inventory'
-DB_USER='web1_user'
+DB_PASSWORD="`$(cat "`$PASSWORD_FILE")"
 mysql <<SQL
-CREATE DATABASE IF NOT EXISTS \`\$DB_NAME\` CHARACTER SET utf8mb4 COLLATE utf8mb4_hungarian_ci;
-CREATE USER IF NOT EXISTS '\$DB_USER'@'127.0.0.1' IDENTIFIED BY '\$DB_PASSWORD';
-ALTER USER '\$DB_USER'@'127.0.0.1' IDENTIFIED BY '\$DB_PASSWORD';
-GRANT ALL PRIVILEGES ON \`\$DB_NAME\`.* TO '\$DB_USER'@'127.0.0.1';
+CREATE DATABASE IF NOT EXISTS software_inventory CHARACTER SET utf8mb4 COLLATE utf8mb4_hungarian_ci;
+CREATE USER IF NOT EXISTS 'web1_user'@'127.0.0.1' IDENTIFIED BY '`$DB_PASSWORD';
+ALTER USER 'web1_user'@'127.0.0.1' IDENTIFIED BY '`$DB_PASSWORD';
+GRANT ALL PRIVILEGES ON software_inventory.* TO 'web1_user'@'127.0.0.1';
 FLUSH PRIVILEGES;
 SQL
 cat >'$RemotePath/backend/.env' <<EOF
-DB_DSN=mysql:host=127.0.0.1;port=3306;dbname=\$DB_NAME;charset=utf8mb4
-DB_USER=\$DB_USER
-DB_PASSWORD=\$DB_PASSWORD
+DB_DSN=mysql:host=127.0.0.1;port=3306;dbname=software_inventory;charset=utf8mb4
+DB_USER=web1_user
+DB_PASSWORD=`$DB_PASSWORD
 DB_TABLE=software_items
 EOF
 chown www-data:www-data '$RemotePath/backend/.env'
