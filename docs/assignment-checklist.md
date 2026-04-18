@@ -12,7 +12,6 @@ Ez a fájl a beadandó fokozatos felépítéséhez készült.
 
 ## Következő implementációs blokkok
 
-- SPA
 - Axios CRUD
 - OOJS rész
 - végső dokumentáció és screenshotok
@@ -21,5 +20,6 @@ Ez a fájl a beadandó fokozatos felépítéséhez készült.
 
 - JavaScript CRUD
 - React CRUD
+- SPA
 - PHP CRUD API
 - Fetch API CRUD

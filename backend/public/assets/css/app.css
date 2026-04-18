@@ -176,12 +176,24 @@ h1 {
   gap: 20px;
 }
 
+.spa-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.8fr) minmax(300px, 1fr);
+  gap: 20px;
+  margin-top: 28px;
+}
+
 .js-side-panel {
   margin-top: 0;
   align-self: start;
 }
 
 .react-side-panel {
+  margin-top: 0;
+  align-self: start;
+}
+
+.spa-side-panel {
   margin-top: 0;
   align-self: start;
 }
@@ -202,6 +214,16 @@ h1 {
   grid-template-columns: minmax(0, 1.7fr) minmax(260px, 1fr);
   gap: 16px;
   align-items: end;
+}
+
+.spa-route-bar,
+.spa-section-heading,
+.spa-group-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .toolbar-actions {
@@ -268,6 +290,76 @@ h1 {
   font-size: 1.1rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
+}
+
+.spa-main {
+  display: grid;
+  gap: 20px;
+}
+
+.spa-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.spa-software-card {
+  display: grid;
+  gap: 14px;
+  align-content: start;
+}
+
+.spa-software-card.is-selected {
+  border-color: #454c54;
+  box-shadow: inset 0 0 0 1px rgba(47, 53, 61, 0.18), var(--shadow);
+}
+
+.spa-software-card h3 {
+  font-size: 1.2rem;
+}
+
+.spa-selected-list {
+  display: grid;
+  gap: 12px;
+  margin: 18px 0;
+}
+
+.spa-selected-item {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px;
+  border: 1px solid rgba(144, 152, 161, 0.5);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.54);
+}
+
+.spa-selected-item p {
+  margin: 4px 0 0;
+}
+
+.spa-group + .spa-group {
+  margin-top: 18px;
+}
+
+.spa-preview {
+  margin: 18px 0 0;
+  padding: 16px;
+  border: 1px solid rgba(144, 152, 161, 0.45);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.68);
+  color: var(--text);
+  white-space: pre-wrap;
+  line-height: 1.6;
+  font-family: "Consolas", "Courier New", monospace;
+}
+
+.spa-textarea {
+  min-height: 132px;
+  padding: 14px;
+  resize: vertical;
 }
 
 .summary-value {
@@ -451,6 +543,7 @@ code {
 @media (max-width: 920px) {
   .js-layout,
   .react-layout,
+  .spa-layout,
   .react-toolbar {
     grid-template-columns: 1fr;
   }

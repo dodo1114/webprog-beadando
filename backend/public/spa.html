@@ -8,16 +8,16 @@
   </head>
   <body>
     <main class="page">
-      <header class="page-header">
-        <a class="back-link" href="./index.html">Vissza a főmenübe</a>
-        <span class="status">Scaffold fázis</span>
-      </header>
-      <section class="panel placeholder">
-        <div>
-          <strong>SPA helye</strong>
-          <p>Itt kap helyet a két miniappos React SPA, külön nézetekkel és közös navigációval.</p>
-        </div>
-      </section>
+      <div id="spa-root"></div>
+      <noscript>
+        <section class="panel">
+          <strong>Az SPA felület használatához JavaScript szükséges.</strong>
+        </section>
+      </noscript>
     </main>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/htm@3.1.1/dist/htm.umd.js"></script>
+    <script src="./assets/js/spa-app.js"></script>
   </body>
 </html>
