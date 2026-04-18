@@ -8,16 +8,16 @@
   </head>
   <body>
     <main class="page">
-      <header class="page-header">
-        <a class="back-link" href="./index.html">Vissza a főmenübe</a>
-        <span class="status">Scaffold fázis</span>
-      </header>
-      <section class="panel placeholder">
-        <div>
-          <strong>React CRUD helye</strong>
-          <p>Itt fogjuk felépíteni a komponens alapú CRUD felületet ugyanarra a szoftverleltár adatkörre.</p>
-        </div>
-      </section>
+      <div id="react-root"></div>
+      <noscript>
+        <section class="panel">
+          <strong>A React CRUD használatához JavaScript szükséges.</strong>
+        </section>
+      </noscript>
     </main>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/htm@3.1.1/dist/htm.umd.js"></script>
+    <script src="./assets/js/react-app.js"></script>
   </body>
 </html>

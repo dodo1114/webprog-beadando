@@ -170,7 +170,18 @@ h1 {
   gap: 20px;
 }
 
+.react-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(320px, 1fr);
+  gap: 20px;
+}
+
 .js-side-panel {
+  margin-top: 0;
+  align-self: start;
+}
+
+.react-side-panel {
   margin-top: 0;
   align-self: start;
 }
@@ -179,6 +190,18 @@ h1 {
   display: grid;
   gap: 16px;
   margin-bottom: 18px;
+}
+
+.react-toolbar-panel {
+  display: grid;
+  gap: 20px;
+}
+
+.react-toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(260px, 1fr);
+  gap: 16px;
+  align-items: end;
 }
 
 .toolbar-actions {
@@ -229,6 +252,22 @@ h1 {
 
 .summary-card {
   min-height: 156px;
+}
+
+.react-insight,
+.react-note {
+  padding: 18px;
+  border-radius: 6px;
+  border: 1px solid rgba(144, 152, 161, 0.5);
+  background: rgba(255, 255, 255, 0.56);
+}
+
+.react-insight strong {
+  display: block;
+  margin-top: 12px;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .summary-value {
@@ -291,6 +330,29 @@ h1 {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+.chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.chip-button {
+  min-height: 38px;
+  padding: 0 14px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+}
+
+.chip-button.is-active {
+  background: linear-gradient(180deg, #656d77 0%, #49515a 100%);
+  border-color: #454c54;
+  color: #f8f9fa;
 }
 
 .mini-button {
@@ -387,7 +449,9 @@ code {
 }
 
 @media (max-width: 920px) {
-  .js-layout {
+  .js-layout,
+  .react-layout,
+  .react-toolbar {
     grid-template-columns: 1fr;
   }
 }

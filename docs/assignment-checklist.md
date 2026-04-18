@@ -19,3 +19,8 @@ Ez a fajl a beadando fokozatos felepitesehez keszul.
 - Axios CRUD
 - OOJS resz
 - deploy es dokumentacio
+
+## Elkeszult blokkok
+
+- JavaScript CRUD
+- React CRUD

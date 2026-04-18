@@ -7,7 +7,8 @@ Ez a repository a Webprogramozas 1 beadando kozos, ketfos megvalositasahoz keszu
 Ez az elso tiszta indulasi commit. A repository most a beadando alapstrukturajat tartalmazza:
 
 - kezdooldal a kotelezo menupontokkal
-- kulon oldalak a JavaScript, React, SPA, Fetch API, Axios es OOJS reszekhez
+- mukodo JavaScript CRUD es React CRUD oldal a szoftverleltar adatkorevel
+- kulon oldalak a SPA, Fetch API, Axios es OOJS reszekhez
 - minimalis PHP backend-vaz a kesobbi szerveroldali CRUD-hoz
 - dokumentacios fajlok a feladattervhez es a GitHub munkamegosztashoz
 
@@ -37,7 +38,7 @@ Ez az elso tiszta indulasi commit. A repository most a beadando alapstrukturajat
 ## Kovetkezo lepesek
 
 1. vegleges adatkeszlet rogzitese az 1-11 szoftverleltar alapjan
-2. JavaScript CRUD megirasa
-3. React CRUD es SPA kiepitese
+2. SPA kiepitese
+3. Fetch API, Axios es OOJS reszek implementalasa
 4. PHP + MySQL CRUD vegpontok bekotese
 5. dokumentacio, deploy es vegso beadando csomag
