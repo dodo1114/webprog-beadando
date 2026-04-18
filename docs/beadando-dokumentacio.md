@@ -225,13 +225,15 @@ A backend PHP alapon készült. A publikus belépési pont a `backend/public/ind
 ### 15.1 Backend felépítés
 
 - `backend/public/index.php`
-  API routing és HTTP-kezelés
+  API routing, front-controller és a portáloldalak HTTP-kezelése
 - `backend/src/SoftwareRepository.php`
   adatlekérdezés és CRUD műveletek
+- `backend/src/SiteRepository.php`
+  belépés, üzenetek, galéria és portál seed adatok kezelése
 - `backend/migrations/001_create_software_items.sql`
   adatbázis séma
 - `backend/scripts/bootstrap_database.php`
-  inicializálás és seed
+  inicializálás, seed és a `Gamf1234 / 1234Gamf` tesztfiók előkészítése
 
 ### 15.2 Mentési modell
 
@@ -241,6 +243,7 @@ A szerveroldali CRUD már nem fájlba ment, hanem MySQL adatbázisba. A health v
 - `table: software_items`
 
 A publikus felületek közül a `Fetch API` és az `Axios` használ szerveroldali perzisztenciát.
+Emellett a portáloldalak külön adatbázistáblákban tárolják a felhasználókat, az üzeneteket és a galériaképeket.
 
 ## 16. Szerver és deploy
 

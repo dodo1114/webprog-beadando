@@ -403,8 +403,13 @@ function handleContactSubmit(): never
         $message
     );
 
-    flash('success', 'Az üzenet sikeresen el lett mentve az adatbázisba.');
-    redirectTo('/kapcsolat');
+    if ($user === null) {
+        flash('success', 'Az üzenet sikeresen el lett mentve az adatbázisba. A feladó a listában Vendég néven fog megjelenni.');
+        redirectTo('/kapcsolat');
+    }
+
+    flash('success', 'Az üzenet sikeresen el lett mentve az adatbázisba. Az Üzenetek oldalon már vissza is ellenőrizheted.');
+    redirectTo('/uzenetek');
 }
 
 function renderHtmlPage(string $title, string $activeMenu, string $content, ?array $currentUser, array $options = []): never
@@ -422,14 +427,16 @@ function renderHtmlPage(string $title, string $activeMenu, string $content, ?arr
     echo '</head><body>';
     echo '<header class="site-shell__header">';
     echo '<div class="page site-shell__header-inner">';
-    echo '<div>';
+    echo '<div class="site-shell__brand-block">';
     echo '<p class="eyebrow site-shell__eyebrow">Web-programozás 1 gyakorlat beadandó</p>';
     echo '<strong class="site-shell__brand">Szoftverleltár portál</strong>';
     echo '</div>';
+    echo '<div class="site-shell__header-tools">';
+    echo renderHeaderIdentity($currentUser);
     echo renderNavigation($activeMenu, $currentUser);
+    echo '</div>';
     echo '</div></header>';
     echo '<main class="page site-shell__main">';
-    echo renderUserBanner($currentUser);
     if ($flash !== null) {
         echo '<section class="panel flash flash--' . h($flash['type']) . '"><p>' . h($flash['message']) . '</p></section>';
     }
@@ -475,14 +482,14 @@ function renderNavigation(string $activeMenu, ?array $currentUser): string
     return $html;
 }
 
-function renderUserBanner(?array $currentUser): string
+function renderHeaderIdentity(?array $currentUser): string
 {
     if ($currentUser === null) {
-        return '<section class="panel auth-banner"><p><strong>Nincs bejelentkezve felhasználó.</strong> A menüben elérhető a belépés és a regisztráció.</p></section>';
+        return '<div class="header-user-card"><span class="header-user-card__label">Bejelentkezett:</span><strong class="header-user-card__value">Vendég</strong></div>';
     }
 
     $label = $currentUser['display_name'] . ' (' . $currentUser['login_name'] . ')';
-    return '<section class="panel auth-banner"><p><strong>Bejelentkezett:</strong> ' . h($label) . '</p></section>';
+    return '<div class="header-user-card"><span class="header-user-card__label">Bejelentkezett:</span><strong class="header-user-card__value">' . h($label) . '</strong></div>';
 }
 
 function renderHomeContent(): string
@@ -659,6 +666,9 @@ function renderContactContent(?array $currentUser): string
 {
     $nameValue = $currentUser === null ? '' : $currentUser['display_name'];
     $emailHint = $currentUser === null ? '' : $currentUser['login_name'] . '@gamf.local';
+    $helperText = $currentUser === null
+        ? 'Bejelentkezés nélkül is küldhetsz üzenetet. Ilyenkor a bejegyzés a listában Vendég feladóval jelenik meg.'
+        : 'Bejelentkezett felhasználóként mentés után az Üzenetek oldalon rögtön látni fogod az új bejegyzést.';
 
     return '
       <section class="hero">
@@ -670,6 +680,7 @@ function renderContactContent(?array $currentUser): string
       </section>
 
       <section class="panel">
+        <p class="muted-line">' . h($helperText) . '</p>
         <div id="contactValidationBox" class="validation-box" hidden></div>
         <form id="contactForm" class="stack-form" method="post" action="' . h(url('/kapcsolat')) . '" novalidate>
           <div class="field-group">

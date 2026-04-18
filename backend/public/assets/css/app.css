@@ -692,10 +692,15 @@ h1 {
 
 .site-shell__header-inner {
   display: grid;
-  gap: 18px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 20px;
   align-items: center;
   padding-top: 20px;
   padding-bottom: 20px;
+}
+
+.site-shell__brand-block {
+  min-width: 0;
 }
 
 .site-shell__eyebrow {
@@ -709,13 +714,45 @@ h1 {
   text-transform: uppercase;
 }
 
+.site-shell__header-tools {
+  display: grid;
+  justify-items: end;
+  gap: 12px;
+}
+
 .site-shell__main {
   padding-top: 28px;
+}
+
+.header-user-card {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px 10px;
+  align-items: center;
+  max-width: min(100%, 36rem);
+  padding: 10px 14px;
+  border: 1px solid rgba(69, 76, 84, 0.2);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.56);
+}
+
+.header-user-card__label {
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-strong);
+}
+
+.header-user-card__value {
+  color: var(--text);
+  line-height: 1.4;
 }
 
 .site-nav__list {
   display: flex;
   flex-wrap: wrap;
+  justify-content: flex-end;
   gap: 10px;
   margin: 0;
   padding: 0;
@@ -740,10 +777,6 @@ h1 {
   background: linear-gradient(180deg, #656d77 0%, #49515a 100%);
   border-color: #454c54;
   color: #f8f9fa;
-}
-
-.auth-banner {
-  margin-top: 0;
 }
 
 .flash {
@@ -917,5 +950,18 @@ code {
   .oojs-layout,
   .react-toolbar {
     grid-template-columns: 1fr;
+  }
+
+  .site-shell__header-inner {
+    grid-template-columns: 1fr;
+  }
+
+  .site-shell__header-tools {
+    justify-items: stretch;
+  }
+
+  .header-user-card,
+  .site-nav__list {
+    justify-content: flex-start;
   }
 }

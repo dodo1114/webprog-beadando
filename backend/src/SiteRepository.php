@@ -185,6 +185,15 @@ final class SiteRepository
         return $items;
     }
 
+    public function getPortalSummary(): array
+    {
+        return [
+            'users' => $this->countRows('users'),
+            'gallery_images' => $this->countRows('gallery_images'),
+            'contact_messages' => $this->countRows('contact_messages'),
+        ];
+    }
+
     private function ensureSchema(): void
     {
         $statements = [
@@ -270,6 +279,11 @@ final class SiteRepository
                 'image_path' => $imagePath,
             ]);
         }
+    }
+
+    private function countRows(string $table): int
+    {
+        return (int)$this->pdo->query(sprintf('SELECT COUNT(*) FROM %s', $table))->fetchColumn();
     }
 
     /**
