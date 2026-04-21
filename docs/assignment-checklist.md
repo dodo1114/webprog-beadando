@@ -22,6 +22,7 @@ Ez a fájl a beadandó végső állapotát foglalja össze.
 - [x] vízszintes menü és reszponzív főoldal
 - [x] két videó és Google térkép a kezdőoldalon
 - [x] bejelentkezett felhasználó megjelenítése a fejlécben
+- [x] regisztrációs captcha védelem a szoftveres bruteforce próbálkozások ellen
 - [x] képfeltöltés csak bejelentkezett állapotban
 - [x] kapcsolat űrlap kliens- és szerveroldali ellenőrzéssel
 - [x] üzenetek lista fordított időrendben

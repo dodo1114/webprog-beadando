@@ -46,6 +46,11 @@ A projekt úgy lett kialakítva, hogy:
 - Login név: `Gamf1234`
 - Jelszó: `1234Gamf`
 
+### 3.4 Regisztrációs védelem
+
+- A regisztrációs űrlap szerveroldalon ellenőrzött, matematikai captcha feladatot használ.
+- Hibás captcha válasz esetén a regisztráció blokkolódik, új feladat generálódik, és a felhasználó hibaüzenetet kap.
+
 ## 4. Funkcionális áttekintés
 
 A rendszer hét publikus felületet tartalmaz:
@@ -64,6 +69,8 @@ A rendszer hét publikus felületet tartalmaz:
    React + Axios kliens ugyanarra a MySQL-backed API-ra kötve.
 7. **OOJS**
    objektumorientált JavaScript műhely, ahol class, extends, super, konstruktorok és dinamikus DOM-építés szerepelnek.
+
+A portál része továbbá a belépés / regisztráció oldal, ahol a regisztrációs folyamat captcha-védelemmel egészül ki.
 
 ## 5. Használt technológiák
 
@@ -134,7 +141,18 @@ A főoldal feladata nem csupán a menüpontok listázása, hanem a projektállap
 
 ![Főoldal](screenshots/01-fooldal.png)
 
-## 9. JavaScript CRUD rész
+## 9. Belépés, regisztráció és captcha
+
+A portál külön belépés / regisztráció oldalt tartalmaz. A rendszer:
+
+- támogatja a belépést, kilépést és regisztrációt
+- nem lépteti be automatikusan a felhasználót regisztráció után
+- megjeleníti a bejelentkezett felhasználót a fejlécben
+- védi a regisztrációt egy szerveroldalon ellenőrzött captcha feladattal
+
+A captcha egy magyar nyelvű egyszerű matematikai kérdés. Helytelen válasz esetén a regisztráció nem fut le, a rendszer új feladatot generál, és hibaüzenetet jelenít meg.
+
+## 10. JavaScript CRUD rész
 
 A JavaScript CRUD rész a legegyszerűbb, keretrendszer nélküli példát mutatja be. A felületen lehet:
 
@@ -148,7 +166,7 @@ Ez a feladatrész arra szolgál, hogy a nyers DOM-kezelés és a kliensoldali ad
 
 ![JavaScript CRUD](screenshots/02-javascript-crud.png)
 
-## 10. React CRUD rész
+## 11. React CRUD rész
 
 A React CRUD ugyanazt az adatkört komponensalapú szerkezetben dolgozza fel. A megoldás célja az volt, hogy a lista, az űrlap és az állapotfrissítés tisztábban, újrafelhasználhatóbb logikával jelenjen meg.
 
@@ -161,7 +179,7 @@ A React-es rész sajátosságai:
 
 ![React CRUD](screenshots/03-react-crud.png)
 
-## 11. SPA rész
+## 12. SPA rész
 
 Az SPA rész egyetlen oldalon belüli, hash-alapú navigációval működő React-alapú mini alkalmazás. A cél az volt, hogy a több nézet, közös kliensoldali állapot és az újratöltés nélküli navigáció egyben is bemutatható legyen.
 
@@ -174,7 +192,7 @@ A felépítés fő elemei:
 
 ![SPA](screenshots/04-spa.png)
 
-## 12. Fetch API rész
+## 13. Fetch API rész
 
 A Fetch API oldal a szerveroldali CRUD egyik referenciafelülete. Ezen a nézeten végzett rekordműveletek ténylegesen a PHP backendhez és a MySQL adatbázishoz mennek.
 
@@ -189,7 +207,7 @@ A szerkesztéshez külön `Módosítás mentése` gombszöveg jelenik meg, hogy 
 
 ![Fetch API](screenshots/05-fetch-api.png)
 
-## 13. Axios rész
+## 14. Axios rész
 
 Az Axios oldal ugyanarra a backend API-ra épül, mint a Fetch rész, de más kliensoldali megközelítést mutat. Itt a cél a React + Axios kombináció bemutatása volt.
 
@@ -201,7 +219,7 @@ Előnyök:
 
 ![Axios](screenshots/06-axios.png)
 
-## 14. OOJS rész
+## 15. OOJS rész
 
 Az OOJS feladatrész nem CRUD-oldal, hanem objektumorientált JavaScript bemutató. A megvalósítás class alapú felépítést, öröklést és dinamikus DOM-építést használ.
 
@@ -218,7 +236,7 @@ A felületen telepítési profil, kijelölés és állapotnapló is megjelenik, 
 
 ![OOJS](screenshots/07-oojs.png)
 
-## 15. Backend és adatbázis
+## 16. Backend és adatbázis
 
 A backend PHP alapon készült. A publikus belépési pont a `backend/public/index.php`, az adatelérés pedig PDO-t használó repository-n keresztül történik.
 
@@ -235,6 +253,8 @@ A backend PHP alapon készült. A publikus belépési pont a `backend/public/ind
 - `backend/scripts/bootstrap_database.php`
   inicializálás, seed és a `Gamf1234 / 1234Gamf` tesztfiók előkészítése
 
+A captcha-generálás és ellenőrzés a front-controllerben történik, session-alapon.
+
 ### 15.2 Mentési modell
 
 A szerveroldali CRUD már nem fájlba ment, hanem MySQL adatbázisba. A health végpont is ezt mutatja:
@@ -245,7 +265,7 @@ A szerveroldali CRUD már nem fájlba ment, hanem MySQL adatbázisba. A health v
 A publikus felületek közül a `Fetch API` és az `Axios` használ szerveroldali perzisztenciát.
 Emellett a portáloldalak külön adatbázistáblákban tárolják a felhasználókat, az üzeneteket és a galériaképeket.
 
-## 16. Szerver és deploy
+## 17. Szerver és deploy
 
 A projekt a `krakovszki.hu` szerveren fut. A deploy célmappa:
 
@@ -260,7 +280,7 @@ A telepítési folyamat scriptelt, így a GitHub és a szerver könnyen szinkron
 
 Az élő elérhetőségek a dokumentáció készítésekor HTTP `200` státusszal válaszoltak.
 
-## 17. GitHub együttműködés
+## 18. GitHub együttműködés
 
 A beadandó egyik lényeges része a kétfős munkavégzés láthatóvá tétele volt. Ez a publikus repositoryban külön authorokkal és külön commitokkal jelenik meg.
 
@@ -275,7 +295,7 @@ A history-ben mindkét résztvevő külön szerzőként jelenik meg.
 
 ![GitHub commits](screenshots/09-github-commits.png)
 
-## 18. Munkamegosztás
+## 19. Munkamegosztás
 
 ### 18.1 Krakovszki Zalán Lóránt
 
@@ -288,14 +308,15 @@ A history-ben mindkét résztvevő külön szerzőként jelenik meg.
 - OOJS rész
 - végső dokumentáció összeállítása
 
-### 18.2 Hársfalvi-Kuczmogh Miklós / `duoptikbt95`
+### 19.2 Hársfalvi-Kuczmogh Miklós / `duoptikbt95`
 
 - React CRUD
 - SPA felület
 - Axios oldal
+- regisztrációs captcha védelem
 - dokumentációs és szövegezési frissítések a repositoryban
 
-## 19. Ellenőrzés és tesztelés
+## 20. Ellenőrzés és tesztelés
 
 A dokumentáció készítésekor az alábbi ellenőrzések történtek:
 
@@ -305,8 +326,9 @@ A dokumentáció készítésekor az alábbi ellenőrzések történtek:
 - a Fetch és Axios részek adatbázisba mentenek
 - a GitHub history-ben két contributor látszik
 - a főoldali formai követelmények teljesülnek
+- a regisztrációs captcha hibás válaszra blokkol és helyes válaszra átengedi a regisztrációt
 
-## 20. Ismert korlátok és záró megjegyzés
+## 21. Ismert korlátok és záró megjegyzés
 
 A projekt funkcionálisan beadásközeli és a kötelező technológiai blokkok elkészültek. A repóban most már külön screenshot-készlet és részletes dokumentáció is rendelkezésre áll. A beadás előtt még egy utolsó gyakorlati lépés marad:
 
@@ -314,7 +336,7 @@ A projekt funkcionálisan beadásközeli és a kötelező technológiai blokkok 
 
 Mivel az oldalak már élő szerveren futnak, az URL-ek ellenőrizhetők, a GitHub history nyilvános, és a képernyőképek is elkészültek, a beadási csomag innen már viszonylag kis kockázattal zárható le.
 
-## 21. Mellékletek
+## 22. Mellékletek
 
 ### 21.1 Screenshot fájlok
 
