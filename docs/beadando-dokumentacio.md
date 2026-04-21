@@ -336,11 +336,9 @@ A dokumentáció készítésekor az alábbi ellenőrzések történtek:
 
 ## 21. Ismert korlátok és záró megjegyzés
 
-A projekt funkcionálisan beadásközeli és a kötelező technológiai blokkok elkészültek. A repóban most már külön screenshot-készlet és részletes dokumentáció is rendelkezésre áll. A beadás előtt még egy utolsó gyakorlati lépés marad:
+A projekt funkcionálisan beadáskész állapotban van, a kötelező technológiai blokkok elkészültek, a screenshot-készlet rendelkezésre áll, és a részletes dokumentáció is összeállt. A publikus repó a nem érzékeny projektinformációkat tartalmazza, míg a végleges, beadott PDF csomag a szükséges ellenőrzési hozzáférésekkel együtt külön, nem publikus formában készült el.
 
-- a jelen dokumentáció exportálása PDF-be
-
-Mivel az oldalak már élő szerveren futnak, az URL-ek ellenőrizhetők, a GitHub history nyilvános, és a képernyőképek is elkészültek, a beadási csomag innen már viszonylag kis kockázattal zárható le.
+Mivel az oldalak élő szerveren futnak, az URL-ek ellenőrizhetők, a GitHub history nyilvános, a képernyőképek elkészültek, és a végleges PDF export is rendelkezésre áll, a beadási csomag lezártnak tekinthető.
 
 ## 22. Mellékletek
 
