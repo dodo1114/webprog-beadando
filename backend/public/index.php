@@ -75,7 +75,8 @@ try {
                 'Képek és galéria',
                 'kepek',
                 renderGalleryContent(siteRepository()->getGalleryImages(), $currentUser),
-                $currentUser
+                $currentUser,
+                ['scripts' => [url('/assets/js/gallery-lightbox.js')]]
             );
             break;
 
@@ -668,9 +669,24 @@ function renderGalleryContent(array $images, ?array $currentUser): string
 
     $cards = '';
     foreach ($images as $image) {
+        $imageUrl = url('/' . ltrim($image['image_path'], '/'));
+        $caption = $image['title'];
+        $meta = 'Feltöltő: ' . $image['uploader_label'] . ' | Dátum: ' . $image['created_at'];
+
         $cards .= '
           <article class="card gallery-card">
-            <img class="gallery-card__image" src="' . h(url('/' . ltrim($image['image_path'], '/'))) . '" alt="' . h($image['title']) . '" />
+            <button
+              class="gallery-card__trigger"
+              type="button"
+              data-gallery-image="true"
+              data-image-src="' . h($imageUrl) . '"
+              data-image-alt="' . h($image['title']) . '"
+              data-image-caption="' . h($caption) . '"
+              data-image-meta="' . h($meta) . '"
+              aria-label="' . h($image['title']) . ' megnyitása nagy nézetben"
+            >
+              <img class="gallery-card__image" src="' . h($imageUrl) . '" alt="' . h($image['title']) . '" />
+            </button>
             <h3>' . h($image['title']) . '</h3>
             <p>Feltöltő: ' . h($image['uploader_label']) . '</p>
             <p>Dátum: ' . h($image['created_at']) . '</p>
@@ -688,10 +704,24 @@ function renderGalleryContent(array $images, ?array $currentUser): string
         <h1>Galéria</h1>
         <p class="lead">
           A képfeltöltés csak bejelentkezett felhasználónak érhető el, a galéria tartalma viszont bárki számára megtekinthető.
+          A képekre kattintva nagy nézetben is megnyithatók.
         </p>
       </section>
       ' . $uploadForm . '
       <section class="section gallery-grid">' . $cards . '</section>
+      <div class="gallery-lightbox" id="galleryLightbox" hidden>
+        <div class="gallery-lightbox__backdrop" data-gallery-close="true"></div>
+        <div class="gallery-lightbox__dialog" role="dialog" aria-modal="true" aria-label="Kép nagy nézetben">
+          <button class="gallery-lightbox__close" type="button" data-gallery-close="true" aria-label="Nagy nézet bezárása">X</button>
+          <figure class="gallery-lightbox__figure">
+            <img class="gallery-lightbox__image" id="galleryLightboxImage" src="" alt="" />
+            <figcaption class="gallery-lightbox__caption">
+              <strong class="gallery-lightbox__title" id="galleryLightboxCaption"></strong>
+              <span class="gallery-lightbox__meta" id="galleryLightboxMeta"></span>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
     ';
 }
 
