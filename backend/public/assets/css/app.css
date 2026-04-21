@@ -180,6 +180,15 @@ h1 {
   padding-left: 20px;
 }
 
+.extra-note-panel {
+  position: relative;
+}
+
+.extra-note-panel .lead {
+  max-width: none;
+  margin-top: 10px;
+}
+
 .js-layout {
   display: grid;
   grid-template-columns: minmax(0, 2fr) minmax(300px, 1fr);
