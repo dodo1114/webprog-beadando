@@ -20,7 +20,7 @@ $portalSummary = $siteRepository->getPortalSummary();
 fwrite(
     STDOUT,
     sprintf(
-        "Database bootstrap OK. %d rekord érhető el a '%s' táblában. Felhasználók: %d, képek: %d, üzenetek: %d. Tesztfiók: Gamf1234 / 1234Gamf.\n",
+        "Database bootstrap OK. %d rekord érhető el a '%s' táblában. Felhasználók: %d, képek: %d, üzenetek: %d. Belső ellenőrző fiók: konfigurálva.\n",
         count($items),
         $softwareRepository->getConnectionInfo()['table'],
         $portalSummary['users'],

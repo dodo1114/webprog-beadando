@@ -11,16 +11,18 @@ use RuntimeException;
 final class SiteRepository
 {
     private PDO $pdo;
+    /** @var array<string, string> */
+    private array $config;
 
     public function __construct(private readonly string $envPath)
     {
-        $config = $this->readConfig();
+        $this->config = $this->readConfig();
 
         try {
             $this->pdo = new PDO(
-                $config['DB_DSN'] ?? '',
-                $config['DB_USER'] ?? '',
-                $config['DB_PASSWORD'] ?? '',
+                $this->config['DB_DSN'] ?? '',
+                $this->config['DB_USER'] ?? '',
+                $this->config['DB_PASSWORD'] ?? '',
                 [
                     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
@@ -236,10 +238,42 @@ final class SiteRepository
 
     private function seedDefaultUser(): void
     {
-        $statement = $this->pdo->prepare('SELECT COUNT(*) FROM users WHERE login_name = :login_name');
-        $statement->execute(['login_name' => 'Gamf1234']);
+        $loginName = trim($this->config['PORTAL_CHECKER_LOGIN'] ?? '');
+        $password = (string)($this->config['PORTAL_CHECKER_PASSWORD'] ?? '');
 
-        if ((int)$statement->fetchColumn() > 0) {
+        if ($loginName === '' || $password === '') {
+            return;
+        }
+
+        $familyName = trim($this->config['PORTAL_CHECKER_FAMILY_NAME'] ?? 'Ellenorzo');
+        $givenName = trim($this->config['PORTAL_CHECKER_GIVEN_NAME'] ?? 'Felhasznalo');
+        $legacyLoginName = 'Gamf1234';
+
+        if ($loginName !== $legacyLoginName) {
+            $deleteLegacy = $this->pdo->prepare('DELETE FROM users WHERE login_name = :login_name');
+            $deleteLegacy->execute(['login_name' => $legacyLoginName]);
+        }
+
+        $statement = $this->pdo->prepare('SELECT id FROM users WHERE login_name = :login_name');
+        $statement->execute(['login_name' => $loginName]);
+        $existingId = $statement->fetchColumn();
+
+        $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+
+        if ($existingId !== false) {
+            $update = $this->pdo->prepare(
+                'UPDATE users
+                 SET family_name = :family_name,
+                     given_name = :given_name,
+                     password_hash = :password_hash
+                 WHERE id = :id'
+            );
+            $update->execute([
+                'id' => (int)$existingId,
+                'family_name' => $familyName,
+                'given_name' => $givenName,
+                'password_hash' => $passwordHash,
+            ]);
             return;
         }
 
@@ -248,10 +282,10 @@ final class SiteRepository
              VALUES (:family_name, :given_name, :login_name, :password_hash)'
         );
         $insert->execute([
-            'family_name' => 'Gamf',
-            'given_name' => '1234',
-            'login_name' => 'Gamf1234',
-            'password_hash' => password_hash('1234Gamf', PASSWORD_DEFAULT),
+            'family_name' => $familyName,
+            'given_name' => $givenName,
+            'login_name' => $loginName,
+            'password_hash' => $passwordHash,
         ]);
     }
 

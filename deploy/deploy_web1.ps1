@@ -103,6 +103,19 @@ if [ ! -f "`$PASSWORD_FILE" ]; then
     chmod 600 "`$PASSWORD_FILE"
 fi
 DB_PASSWORD="`$(cat "`$PASSWORD_FILE")"
+CHECKER_LOGIN_FILE='/root/.web1_checker_login'
+CHECKER_PASSWORD_FILE='/root/.web1_checker_password'
+if [ ! -f "`$CHECKER_LOGIN_FILE" ]; then
+    printf 'web1check_%s\n' "`$(openssl rand -hex 4)" > "`$CHECKER_LOGIN_FILE"
+    chmod 600 "`$CHECKER_LOGIN_FILE"
+fi
+if [ ! -f "`$CHECKER_PASSWORD_FILE" ]; then
+    tr -dc 'A-Za-z0-9' </dev/urandom | head -c 20 > "`$CHECKER_PASSWORD_FILE"
+    printf '\n' >> "`$CHECKER_PASSWORD_FILE"
+    chmod 600 "`$CHECKER_PASSWORD_FILE"
+fi
+CHECKER_LOGIN="`$(tr -d '\n\r' < "`$CHECKER_LOGIN_FILE")"
+CHECKER_PASSWORD="`$(tr -d '\n\r' < "`$CHECKER_PASSWORD_FILE")"
 mysql <<SQL
 CREATE DATABASE IF NOT EXISTS software_inventory CHARACTER SET utf8mb4 COLLATE utf8mb4_hungarian_ci;
 CREATE USER IF NOT EXISTS 'web1_user'@'127.0.0.1' IDENTIFIED BY '`$DB_PASSWORD';
@@ -115,6 +128,10 @@ DB_DSN=mysql:host=127.0.0.1;port=3306;dbname=software_inventory;charset=utf8mb4
 DB_USER=web1_user
 DB_PASSWORD=`$DB_PASSWORD
 DB_TABLE=software_items
+PORTAL_CHECKER_FAMILY_NAME=Ellenorzo
+PORTAL_CHECKER_GIVEN_NAME=Felhasznalo
+PORTAL_CHECKER_LOGIN=`$CHECKER_LOGIN
+PORTAL_CHECKER_PASSWORD=`$CHECKER_PASSWORD
 EOF
 chown www-data:www-data '$RemotePath/backend/.env'
 chmod 640 '$RemotePath/backend/.env'
