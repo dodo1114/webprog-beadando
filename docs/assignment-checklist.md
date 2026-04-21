@@ -47,4 +47,5 @@ Ez a fájl a beadandó végső állapotát foglalja össze.
 - [x] kétfős GitHub history
 - [x] részletes dokumentáció a `docs/beadando-dokumentacio.md` fájlban
 - [x] screenshot-készlet a `docs/screenshots` mappában
-- [ ] végső PDF export a beadáshoz
+- [x] végső PDF export a beadáshoz, helyi privát beadási csomagban
+- [x] ellenőrzési hozzáférési adatok átadva a beadott PDF-ben, biztonsági okból nem a publikus repóban

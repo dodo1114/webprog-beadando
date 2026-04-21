@@ -46,7 +46,13 @@ A projekt úgy lett kialakítva, hogy:
 - Login név: `Gamf1234`
 - Jelszó: `1234Gamf`
 
-### 3.4 Regisztrációs védelem
+### 3.4 Ellenőrzési hozzáférések
+
+- Az élő URL-ek és a tesztfelhasználó publikusak, ezért ezek a GitHub repó dokumentációjában is szerepelnek.
+- A tárhelyhez tartozó SSH/SFTP/FTP hozzáférési adatok, valamint az adatbázis-hozzáférés részletei biztonsági okból nem kerülnek be a publikus GitHub repóba.
+- Az ellenőrzéshez szükséges érzékeny hozzáférési adatok a beadott, végleges PDF dokumentációban kerülnek átadásra.
+
+### 3.5 Regisztrációs védelem
 
 - A regisztrációs űrlap szerveroldalon ellenőrzött, matematikai captcha feladatot használ.
 - Hibás captcha válasz esetén a regisztráció blokkolódik, új feladat generálódik, és a felhasználó hibaüzenetet kap.
