@@ -3,15 +3,15 @@ services:
     image: mariadb:11.4
     restart: unless-stopped
     environment:
-      MARIADB_DATABASE: software_inventory
-      MARIADB_USER: web1_user
-      MARIADB_PASSWORD: web1_docker_password
-      MARIADB_ROOT_PASSWORD: root_docker_password
+      MARIADB_DATABASE: ${DB_NAME:-software_inventory}
+      MARIADB_USER: ${DB_USER:-web1_user}
+      MARIADB_PASSWORD: ${DB_PASSWORD:-web1_docker_password}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root_docker_password}
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_hungarian_ci
     volumes:
       - docker-db-data:/var/lib/mysql
     healthcheck:
-      test: ["CMD-SHELL", "mariadb-admin ping -h 127.0.0.1 -uroot -proot_docker_password --silent"]
+      test: ["CMD-SHELL", "mariadb-admin ping -h 127.0.0.1 -uroot -p$${MARIADB_ROOT_PASSWORD} --silent"]
       interval: 5s
       timeout: 5s
       retries: 20
@@ -25,15 +25,15 @@ services:
         condition: service_healthy
     environment:
       DB_HOST: db
-      DB_PORT: "3306"
-      DB_NAME: software_inventory
-      DB_USER: web1_user
-      DB_PASSWORD: web1_docker_password
-      DB_TABLE: software_items
-      PORTAL_CHECKER_FAMILY_NAME: ""
-      PORTAL_CHECKER_GIVEN_NAME: ""
-      PORTAL_CHECKER_LOGIN: ""
-      PORTAL_CHECKER_PASSWORD: ""
+      DB_PORT: ${DB_PORT:-3306}
+      DB_NAME: ${DB_NAME:-software_inventory}
+      DB_USER: ${DB_USER:-web1_user}
+      DB_PASSWORD: ${DB_PASSWORD:-web1_docker_password}
+      DB_TABLE: ${DB_TABLE:-software_items}
+      PORTAL_CHECKER_FAMILY_NAME: ${PORTAL_CHECKER_FAMILY_NAME:-}
+      PORTAL_CHECKER_GIVEN_NAME: ${PORTAL_CHECKER_GIVEN_NAME:-}
+      PORTAL_CHECKER_LOGIN: ${PORTAL_CHECKER_LOGIN:-}
+      PORTAL_CHECKER_PASSWORD: ${PORTAL_CHECKER_PASSWORD:-}
     ports:
       - "3210:80"
     volumes:
