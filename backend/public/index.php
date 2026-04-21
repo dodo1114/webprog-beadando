@@ -279,26 +279,38 @@ function handleAuthSubmit(): never
         $loginName = trim((string)($_POST['login_name'] ?? ''));
         $password = (string)($_POST['password'] ?? '');
         $passwordAgain = (string)($_POST['password_again'] ?? '');
+        $captchaAnswer = trim((string)($_POST['captcha_answer'] ?? ''));
 
         if ($familyName === '' || $givenName === '' || $loginName === '' || $password === '') {
+            refreshRegistrationCaptcha();
             flash('error', 'Regisztrációhoz minden mező kitöltése kötelező.');
             redirectTo('/belepes');
         }
 
         if ($password !== $passwordAgain) {
+            refreshRegistrationCaptcha();
             flash('error', 'A két jelszó nem egyezik meg.');
             redirectTo('/belepes');
         }
 
         if (strlen($password) < 6) {
+            refreshRegistrationCaptcha();
             flash('error', 'A jelszónak legalább 6 karakter hosszúnak kell lennie.');
+            redirectTo('/belepes');
+        }
+
+        if (!isRegistrationCaptchaValid($captchaAnswer)) {
+            refreshRegistrationCaptcha();
+            flash('error', 'A captcha ellenőrzés sikertelen volt. Oldd meg az új feladatot, és próbáld meg ismét.');
             redirectTo('/belepes');
         }
 
         try {
             siteRepository()->registerUser($familyName, $givenName, $loginName, $password);
+            refreshRegistrationCaptcha();
             flash('success', 'A regisztráció sikeres volt. A rendszer nem léptet be automatikusan, most jelentkezz be.');
         } catch (RuntimeException $exception) {
+            refreshRegistrationCaptcha();
             flash('error', $exception->getMessage());
         }
 
@@ -543,6 +555,8 @@ function renderHomeContent(): string
 
 function renderAuthContent(): string
 {
+    $captcha = getRegistrationCaptcha();
+
     return '
       <section class="hero">
         <p class="eyebrow">Belépés / Regisztráció</p>
@@ -576,6 +590,9 @@ function renderAuthContent(): string
         <section class="panel">
           <p class="eyebrow">Regisztráció</p>
           <h2>Új felhasználó létrehozása</h2>
+          <p class="muted-line">
+            A regisztrációt szerveroldalon ellenőrzött captcha védi, hogy automatikus szoftveres próbálkozásokkal ne lehessen túlterhelni az űrlapot.
+          </p>
           <form class="stack-form" method="post" action="' . h(url('/belepes')) . '">
             <input type="hidden" name="auth_action" value="register" />
             <div class="field-group">
@@ -597,6 +614,22 @@ function renderAuthContent(): string
             <div class="field-group">
               <label class="field-label" for="registerPasswordAgain">Jelszó újra</label>
               <input id="registerPasswordAgain" class="text-input" type="password" name="password_again" />
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="registerCaptcha">Captcha ellenőrzés</label>
+              <div class="captcha-box">
+                <p class="captcha-box__question">' . h($captcha['question']) . '</p>
+                <p class="captcha-box__hint">Írd be számmal a helyes eredményt.</p>
+              </div>
+              <input
+                id="registerCaptcha"
+                class="text-input"
+                type="text"
+                name="captcha_answer"
+                inputmode="numeric"
+                autocomplete="off"
+                placeholder="Például: 12"
+              />
             </div>
             <div class="form-actions">
               <button class="button primary" type="submit">Regisztráció</button>
@@ -904,6 +937,113 @@ function stringLength(string $value): int
     }
 
     return strlen($value);
+}
+
+/**
+ * @return array{question:string,answer:string,generated_at:int}
+ */
+function getRegistrationCaptcha(bool $refresh = false): array
+{
+    $captcha = $_SESSION['registration_captcha'] ?? null;
+
+    if (
+        $refresh
+        || !is_array($captcha)
+        || !isset($captcha['question'], $captcha['answer'], $captcha['generated_at'])
+        || (time() - (int)$captcha['generated_at']) > 900
+    ) {
+        $captcha = buildRegistrationCaptcha();
+        $_SESSION['registration_captcha'] = $captcha;
+    }
+
+    return [
+        'question' => (string)$captcha['question'],
+        'answer' => (string)$captcha['answer'],
+        'generated_at' => (int)$captcha['generated_at'],
+    ];
+}
+
+function refreshRegistrationCaptcha(): void
+{
+    getRegistrationCaptcha(true);
+}
+
+function isRegistrationCaptchaValid(string $answer): bool
+{
+    $captcha = getRegistrationCaptcha();
+    $normalizedAnswer = trim($answer);
+
+    if ($normalizedAnswer === '' || preg_match('/^-?\d+$/', $normalizedAnswer) !== 1) {
+        return false;
+    }
+
+    return hash_equals($captcha['answer'], $normalizedAnswer);
+}
+
+/**
+ * @return array{question:string,answer:string,generated_at:int}
+ */
+function buildRegistrationCaptcha(): array
+{
+    $left = random_int(2, 12);
+    $right = random_int(1, 9);
+    $operation = random_int(0, 1) === 0 ? 'plus' : 'minus';
+
+    if ($operation === 'minus' && $right > $left) {
+        [$left, $right] = [$right, $left];
+    }
+
+    if ($operation === 'plus') {
+        $question = sprintf(
+            'Mennyi %s meg %s?',
+            numberToHungarianWord($left),
+            numberToHungarianWord($right)
+        );
+        $answer = (string)($left + $right);
+    } else {
+        $question = sprintf(
+            'Mennyi %s mínusz %s?',
+            numberToHungarianWord($left),
+            numberToHungarianWord($right)
+        );
+        $answer = (string)($left - $right);
+    }
+
+    return [
+        'question' => $question,
+        'answer' => $answer,
+        'generated_at' => time(),
+    ];
+}
+
+function numberToHungarianWord(int $value): string
+{
+    $dictionary = [
+        0 => 'nulla',
+        1 => 'egy',
+        2 => 'kettő',
+        3 => 'három',
+        4 => 'négy',
+        5 => 'öt',
+        6 => 'hat',
+        7 => 'hét',
+        8 => 'nyolc',
+        9 => 'kilenc',
+        10 => 'tíz',
+        11 => 'tizenegy',
+        12 => 'tizenkettő',
+        13 => 'tizenhárom',
+        14 => 'tizennégy',
+        15 => 'tizenöt',
+        16 => 'tizenhat',
+        17 => 'tizenhét',
+        18 => 'tizennyolc',
+        19 => 'tizenkilenc',
+        20 => 'húsz',
+        21 => 'huszonegy',
+    ];
+
+    return $dictionary[$value] ?? (string)$value;
 }
 
 function softwareRepository(): SoftwareRepository

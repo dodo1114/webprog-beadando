@@ -302,6 +302,30 @@ h1 {
   gap: 12px;
 }
 
+.captcha-box {
+  padding: 14px 16px;
+  border: 1px dashed rgba(69, 76, 84, 0.46);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.58);
+}
+
+.captcha-box__question,
+.captcha-box__hint {
+  margin: 0;
+}
+
+.captcha-box__question {
+  color: var(--accent-strong);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.captcha-box__hint {
+  margin-top: 8px;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
 .summary-card {
   min-height: 156px;
 }
