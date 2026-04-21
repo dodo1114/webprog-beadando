@@ -20,6 +20,8 @@ const state = {
   selectedId: null,
   searchTerm: "",
   isLoading: true,
+  canWrite: false,
+  writeUser: "Gamf1234",
 };
 
 async function bootstrap() {
@@ -39,6 +41,11 @@ function bindEvents() {
 
   elements.form.addEventListener("submit", async (event) => {
     event.preventDefault();
+
+    if (!state.canWrite) {
+      setFeedback(`Az adatbázist csak a ${state.writeUser} felhasználó módosíthatja.`);
+      return;
+    }
 
     const name = elements.nameInput.value.trim();
     const category = elements.categoryInput.value.trim();
@@ -98,6 +105,11 @@ function bindEvents() {
     const deleteButton = event.target.closest("[data-action='delete']");
 
     if (editButton) {
+      if (!state.canWrite) {
+        setFeedback(`Az adatbázist csak a ${state.writeUser} felhasználó módosíthatja.`);
+        return;
+      }
+
       const id = Number(editButton.dataset.id);
       const item = state.items.find((entry) => entry.id === id);
       if (!item) {
@@ -113,6 +125,11 @@ function bindEvents() {
     }
 
     if (deleteButton) {
+      if (!state.canWrite) {
+        setFeedback(`Az adatbázist csak a ${state.writeUser} felhasználó módosíthatja.`);
+        return;
+      }
+
       const id = Number(deleteButton.dataset.id);
       const item = state.items.find((entry) => entry.id === id);
       if (!item) {
@@ -155,8 +172,12 @@ async function loadItems(successMessage = "") {
   try {
     const payload = await requestJson(API_URL);
     state.items = sortByName(payload.items ?? []);
+    state.canWrite = Boolean(payload.can_write);
+    state.writeUser = String(payload.write_user ?? "Gamf1234");
     if (successMessage) {
       setFeedback(successMessage);
+    } else if (!state.canWrite) {
+      setFeedback(`Csak megtekintés: az adatbázist kizárólag a ${state.writeUser} felhasználó módosíthatja.`);
     }
   } catch (error) {
     console.error(error);
@@ -207,6 +228,13 @@ function renderSummary(filteredItems) {
       value: selectedItem ? selectedItem.nev : "nincs",
       detail: selectedItem ? selectedItem.kategoria : "Új rekord felvétele mód.",
     },
+    {
+      label: "Írási jog",
+      value: state.canWrite ? "engedélyezve" : "tiltva",
+      detail: state.canWrite
+        ? `${state.writeUser} felhasználóval módosítható az adatbázis.`
+        : `Az adatbázist csak a ${state.writeUser} felhasználó írhatja.`,
+    },
   ];
 
   elements.summary.innerHTML = cards
@@ -245,10 +273,14 @@ function renderTable(filteredItems) {
           <td><strong>${item.nev}</strong></td>
           <td><span class="table-badge">${item.kategoria}</span></td>
           <td>
-            <div class="row-actions">
+            ${
+              state.canWrite
+                ? `<div class="row-actions">
               <button class="mini-button" type="button" data-action="edit" data-id="${item.id}">Szerkesztés</button>
               <button class="mini-button danger" type="button" data-action="delete" data-id="${item.id}">Törlés</button>
-            </div>
+            </div>`
+                : `<span class="muted-inline">Csak olvasás</span>`
+            }
           </td>
         </tr>
       `
@@ -260,8 +292,21 @@ function renderTable(filteredItems) {
 
 function renderFormState() {
   const selectedItem = state.items.find((item) => item.id === state.selectedId);
-  elements.formTitle.textContent = selectedItem ? "Szoftver szerkesztése" : "Új szoftver felvétele";
-  elements.submitButton.textContent = selectedItem ? "Módosítás mentése" : "Mentés";
+  const isReadOnly = !state.canWrite;
+
+  elements.formTitle.textContent = isReadOnly
+    ? "Csak megtekintés"
+    : selectedItem
+      ? "Szoftver szerkesztése"
+      : "Új szoftver felvétele";
+  elements.submitButton.textContent = isReadOnly
+    ? `Csak ${state.writeUser} módosíthat`
+    : selectedItem
+      ? "Módosítás mentése"
+      : "Mentés";
+  elements.nameInput.disabled = isReadOnly || state.isLoading;
+  elements.categoryInput.disabled = isReadOnly || state.isLoading;
+  elements.submitButton.disabled = isReadOnly || state.isLoading;
 }
 
 function resetForm() {
@@ -276,7 +321,7 @@ function setFeedback(message) {
 function setBusy(isBusy) {
   state.isLoading = isBusy;
   elements.reloadButton.disabled = isBusy;
-  elements.submitButton.disabled = isBusy;
+  elements.submitButton.disabled = isBusy || !state.canWrite;
   elements.cancelEditButton.disabled = isBusy;
 }
 

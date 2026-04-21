@@ -86,6 +86,8 @@
     const [items, setItems] = useState([]);
     const [editingId, setEditingId] = useState(null);
     const [draft, setDraft] = useState({ nev: "", kategoria: "" });
+    const [canWrite, setCanWrite] = useState(false);
+    const [writeUser, setWriteUser] = useState("Gamf1234");
     const [searchTerm, setSearchTerm] = useState("");
     const [categoryFilter, setCategoryFilter] = useState("osszes");
     const [feedback, setFeedback] = useState("Az Axios nézet inicializálása folyamatban van.");
@@ -118,13 +120,19 @@
 
       async function bootstrap() {
         try {
-          const nextItems = await fetchItems();
+          const payload = await fetchItems();
           if (!isMounted) {
             return;
           }
 
-          setItems(nextItems);
-          setFeedback("Az Axios kliens sikeresen betöltötte a szerveroldali listát.");
+          setItems(payload.items);
+          setCanWrite(payload.canWrite);
+          setWriteUser(payload.writeUser);
+          setFeedback(
+            payload.canWrite
+              ? "Az Axios kliens sikeresen betöltötte a szerveroldali listát."
+              : `Csak megtekintés: az adatbázist kizárólag a ${payload.writeUser} felhasználó módosíthatja.`
+          );
         } catch (error) {
           console.error(error);
           if (isMounted) {
@@ -167,7 +175,11 @@
 
     async function fetchItems() {
       const response = await api.get(API_URL);
-      return normalizeItems(response.data?.items);
+      return {
+        items: normalizeItems(response.data?.items),
+        canWrite: Boolean(response.data?.can_write),
+        writeUser: String(response.data?.write_user ?? "Gamf1234"),
+      };
     }
 
     function resetEditor(message) {
@@ -186,9 +198,15 @@
       setIsBusy(true);
 
       try {
-        const nextItems = await fetchItems();
-        setItems(nextItems);
-        setFeedback("Az Axios kliens frissítette a szerveroldali listát.");
+        const payload = await fetchItems();
+        setItems(payload.items);
+        setCanWrite(payload.canWrite);
+        setWriteUser(payload.writeUser);
+        setFeedback(
+          payload.canWrite
+            ? "Az Axios kliens frissítette a szerveroldali listát."
+            : `Csak megtekintés: az adatbázist kizárólag a ${payload.writeUser} felhasználó módosíthatja.`
+        );
       } catch (error) {
         console.error(error);
         setFeedback(getErrorMessage(error));
@@ -199,6 +217,11 @@
 
     async function handleSubmit(event) {
       event.preventDefault();
+
+      if (!canWrite) {
+        setFeedback(`Az adatbázist csak a ${writeUser} felhasználó módosíthatja.`);
+        return;
+      }
 
       const name = draft.nev.trim();
       const category = draft.kategoria.trim();
@@ -241,12 +264,22 @@
     }
 
     function handleEdit(item) {
+      if (!canWrite) {
+        setFeedback(`Az adatbázist csak a ${writeUser} felhasználó módosíthatja.`);
+        return;
+      }
+
       setEditingId(item.id);
       setDraft({ nev: item.nev, kategoria: item.kategoria });
       setFeedback(`Szerkesztés alatt: ${item.nev}.`);
     }
 
     async function handleDelete(item) {
+      if (!canWrite) {
+        setFeedback(`Az adatbázist csak a ${writeUser} felhasználó módosíthatja.`);
+        return;
+      }
+
       const confirmed = window.confirm(`Biztosan törlöd ezt a rekordot: ${item.nev}?`);
       if (!confirmed) {
         return;
@@ -315,6 +348,13 @@
         label: "Szerkesztés alatt",
         value: selectedItem ? selectedItem.nev : "nincs",
         detail: selectedItem ? selectedItem.kategoria : "Új rekord felvétele mód.",
+      },
+      {
+        label: "Írási jog",
+        value: canWrite ? "engedélyezve" : "tiltva",
+        detail: canWrite
+          ? `${writeUser} felhasználóval módosítható az adatbázis.`
+          : `Az adatbázist csak a ${writeUser} felhasználó írhatja.`,
       },
     ];
 
@@ -416,19 +456,23 @@
                           <td><strong>${item.nev}</strong></td>
                           <td><span className="table-badge">${item.kategoria}</span></td>
                           <td>
-                            <div className="row-actions">
-                              <button className="mini-button" type="button" onClick=${() => handleEdit(item)} disabled=${isBusy}>
-                                Szerkesztés
-                              </button>
-                              <button
-                                className="mini-button danger"
-                                type="button"
-                                onClick=${() => handleDelete(item)}
-                                disabled=${isBusy}
-                              >
-                                Törlés
-                              </button>
-                            </div>
+                            ${canWrite
+                              ? html`
+                                  <div className="row-actions">
+                                    <button className="mini-button" type="button" onClick=${() => handleEdit(item)} disabled=${isBusy}>
+                                      Szerkesztés
+                                    </button>
+                                    <button
+                                      className="mini-button danger"
+                                      type="button"
+                                      onClick=${() => handleDelete(item)}
+                                      disabled=${isBusy}
+                                    >
+                                      Törlés
+                                    </button>
+                                  </div>
+                                `
+                              : html`<span className="muted-inline">Csak olvasás</span>`}
                           </td>
                         </tr>
                       `
@@ -443,7 +487,7 @@
 
         <aside className="panel react-side-panel">
           <p className="eyebrow">Űrlap</p>
-          <h2>${editingId === null ? "Új szoftver felvétele" : "Szoftver szerkesztése"}</h2>
+          <h2>${canWrite ? (editingId === null ? "Új szoftver felvétele" : "Szoftver szerkesztése") : "Csak megtekintés"}</h2>
           <form className="stack-form" onSubmit=${handleSubmit}>
             <div className="field-group">
               <label className="field-label" htmlFor="axiosNameInput">Szoftver neve</label>
@@ -455,7 +499,7 @@
                 value=${draft.nev}
                 onChange=${(event) => handleDraftChange("nev", event.target.value)}
                 required
-                disabled=${isBusy}
+                disabled=${isBusy || !canWrite}
               />
             </div>
             <div className="field-group">
@@ -468,12 +512,12 @@
                 value=${draft.kategoria}
                 onChange=${(event) => handleDraftChange("kategoria", event.target.value)}
                 required
-                disabled=${isBusy}
+                disabled=${isBusy || !canWrite}
               />
             </div>
             <div className="form-actions">
-              <button className="button primary" type="submit" disabled=${isBusy}>
-                ${editingId === null ? "Mentés" : "Módosítás mentése"}
+              <button className="button primary" type="submit" disabled=${isBusy || !canWrite}>
+                ${canWrite ? (editingId === null ? "Mentés" : "Módosítás mentése") : `Csak ${writeUser} módosíthat`}
               </button>
               <button className="button" type="button" onClick=${() => resetEditor("Az Axios űrlap alaphelyzetbe állt.")} disabled=${isBusy}>
                 Szerkesztés megszakítása
