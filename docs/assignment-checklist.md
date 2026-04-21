@@ -40,7 +40,7 @@ Ez a fájl a beadandó végső állapotát foglalja össze.
 - [x] MySQL adatbázis-alapú szerveroldali mentés
 - [x] egészségellenőrző API végpont
 - [x] `/var/www/html/web1` deploy célmappa
-- [x] tesztelői felhasználó: `Gamf1234` / `1234Gamf`
+- [x] ellenőrző belépési adatok csak a nem publikus beadási csomagban szerepelnek
 
 ## Beadási kellékek
 

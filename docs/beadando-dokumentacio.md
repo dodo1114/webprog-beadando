@@ -43,8 +43,8 @@ A projekt úgy lett kialakítva, hogy:
 
 ### 3.3 Ellenőrző felhasználó
 
-- Login név: `Gamf1234`
-- Jelszó: `1234Gamf`
+- Az ellenőrzéshez szükséges belépési adatok biztonsági okból nem szerepelnek a publikus repositoryban.
+- A végleges, beadott PDF csomag tartalmazza a szükséges hozzáféréseket.
 
 ### 3.4 Ellenőrzési hozzáférések
 
@@ -257,7 +257,7 @@ A backend PHP alapon készült. A publikus belépési pont a `backend/public/ind
 - `backend/migrations/001_create_software_items.sql`
   adatbázis séma
 - `backend/scripts/bootstrap_database.php`
-  inicializálás, seed és a `Gamf1234 / 1234Gamf` tesztfiók előkészítése
+  inicializálás, seed és a belső ellenőrző felhasználó előkészítése
 
 A captcha-generálás és ellenőrzés a front-controllerben történik, session-alapon.
 

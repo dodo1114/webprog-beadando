@@ -562,8 +562,8 @@ function renderAuthContent(): string
         <p class="eyebrow">Belépés / Regisztráció</p>
         <h1>Felhasználói hozzáférés</h1>
         <p class="lead">
-          A beadandó dokumentum szerint a rendszer tartalmaz belépést, kilépést és regisztrációt. A teszteléshez előkészített
-          fő felhasználó: <strong>Gamf1234</strong>, jelszó: <strong>1234Gamf</strong>.
+          A beadandó dokumentum szerint a rendszer tartalmaz belépést, kilépést és regisztrációt.
+          A publikus felületen érzékeny belépési adat nem jelenik meg.
         </p>
       </section>
 
