@@ -527,6 +527,15 @@ function renderHomeContent(): string
         </p>
       </section>
 
+      <section class="panel extra-note-panel">
+        <p class="eyebrow">Extra</p>
+        <h2>Docker indítás</h2>
+        <p class="lead">
+          Extra docker konténer megoldásunk: <code>docker compose up -d --build</code>.
+          A lokális példány ilyenkor a <strong>3210</strong>-es porton érhető el.
+        </p>
+      </section>
+
       <section class="section media-grid">
         <article class="panel media-card">
           <p class="eyebrow">Saját tárhelyről</p>

@@ -1,0 +1,14 @@
+.git
+.tools
+.assignment_docs
+.tmp_docx_review
+onir-output
+android
+dist
+Installed-React-19.2.0.zip
+Megoldasok.zip
+Web-1-Előadás-Beadandó.zip
+*.zip
+*.pdf
+tmp_page*.png
+backend/.env
