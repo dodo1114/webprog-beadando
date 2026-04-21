@@ -479,7 +479,7 @@ function renderNavigation(string $activeMenu, ?array $currentUser): string
 
     $items[] = ['key' => 'crud', 'label' => 'CRUD', 'href' => url('/crud')];
     $items[] = $currentUser === null
-        ? ['key' => 'belepes', 'label' => 'Bejelentkezés', 'href' => url('/belepes')]
+        ? ['key' => 'belepes', 'label' => 'Bejelentkezés / Regisztráció', 'href' => url('/belepes')]
         : ['key' => 'kilepes', 'label' => 'Kilépés', 'href' => url('/kilepes')];
 
     $html = '<nav class="site-nav" aria-label="Fő navigáció"><ul class="site-nav__list">';
