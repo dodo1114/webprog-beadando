@@ -136,6 +136,7 @@ try {
 function handleApiRequest(string $path, string $method): never
 {
     header('Content-Type: application/json; charset=utf-8');
+    $canWriteSoftware = canModifySoftwareInventory();
 
     if ($path === '/api/v1/health' && $method === 'GET') {
         try {
@@ -163,6 +164,8 @@ function handleApiRequest(string $path, string $method): never
         try {
             respond(200, [
                 'items' => softwareRepository()->getAll(),
+                'can_write' => $canWriteSoftware,
+                'write_user' => 'Gamf1234',
             ]);
         } catch (RuntimeException $exception) {
             respond(500, [
@@ -173,6 +176,7 @@ function handleApiRequest(string $path, string $method): never
     }
 
     if ($path === '/api/v1/software' && $method === 'POST') {
+        requireSoftwareWriteAccessApi();
         $payload = readJsonPayload();
         $name = normalizeField($payload, 'nev');
         $category = normalizeField($payload, 'kategoria');
@@ -211,10 +215,15 @@ function handleApiRequest(string $path, string $method): never
                     ]);
                 }
 
-                respond(200, ['item' => $item]);
+                respond(200, [
+                    'item' => $item,
+                    'can_write' => $canWriteSoftware,
+                    'write_user' => 'Gamf1234',
+                ]);
             }
 
             if ($method === 'PATCH') {
+                requireSoftwareWriteAccessApi();
                 $payload = readJsonPayload();
                 $name = normalizeField($payload, 'nev');
                 $category = normalizeField($payload, 'kategoria');
@@ -241,6 +250,7 @@ function handleApiRequest(string $path, string $method): never
             }
 
             if ($method === 'DELETE') {
+                requireSoftwareWriteAccessApi();
                 $deleted = softwareRepository()->delete($id);
                 if ($deleted === null) {
                     respond(404, [
@@ -898,6 +908,26 @@ function requireLogin(): void
 
     flash('error', 'Ehhez az oldalhoz bejelentkezés szükséges.');
     redirectTo('/belepes');
+}
+
+function canModifySoftwareInventory(): bool
+{
+    $user = currentUser();
+
+    return $user !== null && (($user['login_name'] ?? '') === 'Gamf1234');
+}
+
+function requireSoftwareWriteAccessApi(): void
+{
+    if (canModifySoftwareInventory()) {
+        return;
+    }
+
+    respond(403, [
+        'error' => 'forbidden',
+        'message' => 'Az adatbázis módosításához a Gamf1234 felhasználóval kell belépni.',
+        'write_user' => 'Gamf1234',
+    ]);
 }
 
 function flash(string $type, string $message): void
