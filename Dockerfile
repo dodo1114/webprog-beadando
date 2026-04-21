@@ -10,7 +10,8 @@ WORKDIR /var/www/html
 
 COPY docker/apache-vhost.conf /etc/apache2/sites-available/000-default.conf
 COPY docker/entrypoint.sh /usr/local/bin/web1-entrypoint
-RUN chmod +x /usr/local/bin/web1-entrypoint
+RUN sed -i 's/\r$//' /usr/local/bin/web1-entrypoint \
+    && chmod +x /usr/local/bin/web1-entrypoint
 
 COPY . /var/www/html
 
