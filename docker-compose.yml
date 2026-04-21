@@ -1,6 +1,6 @@
 services:
   db:
-    image: mariadb:11.4
+    image: mariadb:10.11
     restart: unless-stopped
     environment:
       MARIADB_DATABASE: ${DB_NAME:-software_inventory}
@@ -11,10 +11,15 @@ services:
     volumes:
       - docker-db-data:/var/lib/mysql
     healthcheck:
-      test: ["CMD-SHELL", "mariadb-admin ping -h 127.0.0.1 -uroot -p$${MARIADB_ROOT_PASSWORD} --silent"]
+      test:
+        [
+          "CMD-SHELL",
+          "mariadb -h 127.0.0.1 -u$${MARIADB_USER} -p$${MARIADB_PASSWORD} $${MARIADB_DATABASE} -e 'SELECT 1' >/dev/null 2>&1",
+        ]
+      start_period: 45s
       interval: 5s
       timeout: 5s
-      retries: 20
+      retries: 30
 
   app:
     build:

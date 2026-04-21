@@ -522,12 +522,14 @@ function renderHomeContent(): string
         <h2>Docker indítás</h2>
         <p class="lead">
           Extra docker konténer megoldásunk:
-          <code>sudo docker run --rm -v /var/run/docker.sock:/var/run/docker.sock alpine:3.22 sh -lc "apk add --no-cache docker-cli docker-cli-compose curl tar &gt;/dev/null &amp;&amp; rm -rf /tmp/web1extra &amp;&amp; mkdir -p /tmp/web1extra &amp;&amp; curl -L https://github.com/dodo1114/webprog-beadando/archive/refs/heads/codex/docker-extra.tar.gz | tar -xz --strip-components=1 -C /tmp/web1extra &amp;&amp; cd /tmp/web1extra &amp;&amp; docker compose -p web1extra up -d --build"</code>.
+          <code>sudo docker run --rm -v /var/run/docker.sock:/var/run/docker.sock alpine:3.22 sh -lc "apk add --no-cache docker-cli docker-cli-compose curl tar &gt;/dev/null &amp;&amp; rm -rf /tmp/web1extra &amp;&amp; mkdir -p /tmp/web1extra &amp;&amp; curl -L https://github.com/dodo1114/webprog-beadando/archive/refs/heads/codex/docker-extra.tar.gz | tar -xz --strip-components=1 -C /tmp/web1extra &amp;&amp; cd /tmp/web1extra &amp;&amp; docker compose -p web1extra down -v --remove-orphans &gt;/dev/null 2&gt;&amp;1 || true &amp;&amp; docker compose -p web1extra up -d --build"</code>.
         </p>
         <p class="muted-line">
           A Docker extra egy külön <strong>web1extra</strong> compose projektet indít saját adatbázissal,
           és a webalkalmazást a <strong>3210</strong>-es portra publikálja. A <code>sudo</code> előtag azért szerepel,
           mert sok Linux szerveren a normál felhasználó nem fér hozzá közvetlenül a Docker daemonhoz.
+          Az indítás előtt a parancs a korábbi <code>web1extra</code> konténereket és volume-okat is letakarítja,
+          így félresikerült korábbi próbák után is tiszta állapotból indul.
         </p>
       </section>
 
