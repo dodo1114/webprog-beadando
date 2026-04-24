@@ -133,7 +133,7 @@ Az adatokat a kliensoldali példák és a szerveroldali CRUD közös sémával h
 | OOJS class / extends / super / appendChild | teljesítve |
 | Élő tárhely | teljesítve |
 | Kétfős GitHub history | teljesítve |
-| Dokumentáció és screenshotok | teljesítve, a PDF export még hátra van |
+| Dokumentáció és screenshotok | teljesítve, a végleges PDF a nem publikus beadási csomag része |
 
 ## 8. Főoldal és navigáció
 
