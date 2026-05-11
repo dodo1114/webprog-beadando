@@ -1,24 +1,24 @@
-# Webprogramozás 1 beadandó dokumentáció
+# Webprogramozás 1 előadás házi feladat dokumentáció
 
 ## 1. Címlap
 
 **Tárgy:** Webprogramozás 1  
-**Beadandó típusa:** közös, kétfős féléves beadandó  
+**Beadandó típusa:** közös, kétfős elméleti beadandó  
 **Projekt címe:** Szoftverleltár  
 **Készítők:** Hársfalvi-Kuczmogh Miklós (`D19FB3`) és Krakovszki Zalán Lóránt (`D3FKB4`)  
 **GitHub repository:** [https://github.com/dodo1114/webprog-beadando](https://github.com/dodo1114/webprog-beadando)  
 **Élő URL:** [https://krakovszki.hu/web1/](https://krakovszki.hu/web1/)  
-**Dokumentáció dátuma:** 2026. április 18.
+**Dokumentáció dátuma:** 2026. május 11.
 
 ## 2. A beadandó célja
 
-A beadandó célja egy olyan többoldalas webes alkalmazás elkészítése volt, amely a tárgyi kiírás összes fő technológiai blokkját egyetlen közös témára, az `1-11 szoftverleltár` adatkörre fűzi fel. A rendszer feladata a szoftverállomány áttekintése, keresése, karbantartása és több eltérő frontend-megközelítés bemutatása.
+A beadandó célja egy olyan webes szemléltető anyag és demonstrációs felület elkészítése volt, amely az előadás házi feladat fő technológiai blokkjait egyetlen közös témára, az `1-11 szoftverleltár` adatkörre fűzi fel. A rendszer feladata a szoftverállomány áttekintésének, keresésének, karbantartásának és több eltérő frontend-megközelítésnek a bemutatása.
 
 A projekt úgy lett kialakítva, hogy:
 
-- teljesítse a JavaScript, React, SPA, Fetch API, Axios és OOJS feladatrészeket
-- külön szerveroldali CRUD végpontot adjon PHP alapon
-- élő hoszton fusson
+- szemléltető módon lefedje a JavaScript, React, SPA, Fetch API, Axios és OOJS témákat
+- külön szerveroldali CRUD végpontot mutasson be PHP alapon
+- élő hoszton is bemutatható legyen
 - GitHubon kétfős munkával, látható commit-historyval készüljön
 
 ## 3. Projektazonosítók és elérhetőségek
@@ -48,7 +48,7 @@ A projekt úgy lett kialakítva, hogy:
 
 ### 3.4 Ellenőrzési hozzáférések
 
-- Az élő URL-ek és a tesztfelhasználó publikusak, ezért ezek a GitHub repó dokumentációjában is szerepelnek.
+- Az élő URL-ek publikusak, ezért ezek a GitHub repó dokumentációjában is szerepelnek.
 - A tárhelyhez tartozó SSH/SFTP/FTP hozzáférési adatok, valamint az adatbázis-hozzáférés részletei biztonsági okból nem kerülnek be a publikus GitHub repóba.
 - Az ellenőrzéshez szükséges érzékeny hozzáférési adatok a beadott, végleges PDF dokumentációban kerülnek átadásra.
 
@@ -57,9 +57,9 @@ A projekt úgy lett kialakítva, hogy:
 - A regisztrációs űrlap szerveroldalon ellenőrzött, matematikai captcha feladatot használ.
 - Hibás captcha válasz esetén a regisztráció blokkolódik, új feladat generálódik, és a felhasználó hibaüzenetet kap.
 
-## 4. Funkcionális áttekintés
+## 4. Funkcionális és szemléltető áttekintés
 
-A rendszer hét publikus felületet tartalmaz:
+A rendszer több publikus felületet tartalmaz, amelyek az előadás házi feladat témáit szemléltetik:
 
 1. **Kezdőoldal**
    összefoglalja a projekt állapotát, tartalmazza a kötelező H1 címet, a navigációt és a készítők adatait.
@@ -106,7 +106,7 @@ A portál része továbbá a belépés / regisztráció oldal, ahol a regisztrá
 
 ## 6. Adatmodell
 
-Az alkalmazás alapja a szoftverleltár. Az egyes rekordok a gyakorlatban az alábbi mezőket tartalmazzák:
+Az alkalmazás alapja a szoftverleltár. Az egyes mintarekordok az alábbi mezőket tartalmazzák:
 
 - azonosító
 - szoftver neve
@@ -133,7 +133,7 @@ Az adatokat a kliensoldali példák és a szerveroldali CRUD közös sémával h
 | OOJS class / extends / super / appendChild | teljesítve |
 | Élő tárhely | teljesítve |
 | Kétfős GitHub history | teljesítve |
-| Dokumentáció és screenshotok | teljesítve, a végleges PDF a nem publikus beadási csomag része |
+| Dokumentáció és screenshotok | teljesítve, a végleges PDF a nem publikus beadási csomag részeként elkészült |
 
 ## 8. Főoldal és navigáció
 
@@ -288,7 +288,7 @@ Az élő elérhetőségek a dokumentáció készítésekor HTTP `200` státussza
 
 ## 18. GitHub együttműködés
 
-A beadandó egyik lényeges része a kétfős munkavégzés láthatóvá tétele volt. Ez a publikus repositoryban külön authorokkal és külön commitokkal jelenik meg.
+Az elméleti beadandó egyik lényeges része a kétfős munkavégzés láthatóvá tétele volt. Ez a publikus repositoryban külön authorokkal és külön commitokkal jelenik meg.
 
 Az aktuális `git shortlog` szerint a `main` ágban legalább két egyértelmű contributor látszik:
 
@@ -336,9 +336,9 @@ A dokumentáció készítésekor az alábbi ellenőrzések történtek:
 
 ## 21. Ismert korlátok és záró megjegyzés
 
-A projekt funkcionálisan beadáskész állapotban van, a kötelező technológiai blokkok elkészültek, a screenshot-készlet rendelkezésre áll, és a részletes dokumentáció is összeállt. A publikus repó a nem érzékeny projektinformációkat tartalmazza, míg a végleges, beadott PDF csomag a szükséges ellenőrzési hozzáférésekkel együtt külön, nem publikus formában készült el.
+Az anyag funkcionálisan beadáskész állapotban van, a kötelező technológiai blokkok elkészültek, a screenshot-készlet rendelkezésre áll, és a részletes dokumentáció is összeállt. A publikus repó a nem érzékeny projektinformációkat tartalmazza, míg a végleges, beadott PDF csomag a szükséges ellenőrzési hozzáférésekkel együtt külön, nem publikus formában készült el.
 
-Mivel az oldalak élő szerveren futnak, az URL-ek ellenőrizhetők, a GitHub history nyilvános, a képernyőképek elkészültek, és a végleges PDF export is rendelkezésre áll, a beadási csomag lezártnak tekinthető.
+Mivel az oldalak élő szerveren futnak, az URL-ek ellenőrizhetők, a GitHub history nyilvános, a képernyőképek elkészültek, és a végleges PDF export is rendelkezésre áll, az előadás házi feladathoz tartozó beadási csomag lezártnak tekinthető.
 
 ## 22. Mellékletek
 

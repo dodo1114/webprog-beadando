@@ -1,6 +1,6 @@
 # GitHub Teamwork
 
-Ez a repository kétfős beadandóhoz készül.
+Ez a repository a kétfős elméleti beadandóhoz készülő közös munka nyomát rögzíti.
 
 ## Alapszabályok
 

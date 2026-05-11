@@ -1,6 +1,6 @@
 # React Mappa
 
-Ez a mappa a beadandó React-alapú részeihez tartozó forrás- és disztribúciós lenyomatokat tartalmazza.
+Ez a mappa az előadás házi feladat React-alapú szemléltető részeihez tartozó forrás- és disztribúciós lenyomatokat tartalmazza.
 
 ## Tartalom
 
@@ -11,5 +11,5 @@ Ez a mappa a beadandó React-alapú részeihez tartozó forrás- és disztribúc
 
 ## Megjegyzés
 
-A futó alkalmazás a `backend/public` alól szolgálódik ki, de a beadandó ellenőrzéséhez a React-alapú részek
+A futó alkalmazás a `backend/public` alól szolgálódik ki, de az elméleti beadandó ellenőrzéséhez a React-alapú részek
 forrás- és disztribúciós állapota itt külön is megtekinthető.

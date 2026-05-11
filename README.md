@@ -1,6 +1,6 @@
-# Webprog Beadandó
+# Webprogramozás 1 Előadás Házi Feladat
 
-Ez a repository a Webprogramozás 1 beadandó közös, kétfős megvalósítását tartalmazza.
+Ez a repository a Webprogramozás 1 előadás házi feladathoz készített közös, kétfős elméleti beadandó webes kísérőanyagát és szemléltető megvalósítását tartalmazza.
 
 ## Résztvevők
 
@@ -28,7 +28,7 @@ Extra docker konténer megoldásunk:
 - az indítás előtt a parancs letakarítja a korábbi `web1extra` konténereket és volume-okat is, így új gépen és korábbi félresikerült próbák után is tiszta állapotból indul
 - a publikus ellenőrző belépési adatok itt sincsenek beégetve; Docker alatt regisztrációval vagy külön környezeti változókkal használható
 
-## Elkészült feladatrészek
+## Elkészült szemléltető részek
 
 - főoldal a kötelező navigációval, H1 címmel, videókkal és Google térképpel
 - belépés, kilépés, regisztráció
@@ -79,4 +79,4 @@ Ezek a beadott, nem publikus dokumentációs csomag részei.
 
 ## Aktuális állapot
 
-A projekt beadásközeli állapotban van. A dokumentumban szereplő fő portálfunkciók és a technológiai blokkok is elkészültek, az élő tárhelyes futás és az adatbázis-alapú szerveroldali mentés működik, a dokumentáció és a képernyőképek pedig a `docs` mappában találhatók.
+A projekt az előadás házi feladat beadási csomagjához igazított állapotban van. A szemléltető portálfunkciók és a technológiai blokkok elkészültek, az élő tárhelyes futás és az adatbázis-alapú szerveroldali mentés működik, a dokumentáció és a képernyőképek pedig a `docs` mappában találhatók.

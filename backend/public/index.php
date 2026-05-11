@@ -451,7 +451,7 @@ function renderHtmlPage(string $title, string $activeMenu, string $content, ?arr
     echo '<header class="site-shell__header">';
     echo '<div class="page site-shell__header-inner">';
     echo '<div class="site-shell__brand-block">';
-    echo '<p class="eyebrow site-shell__eyebrow">Web-programozás 1 gyakorlat beadandó</p>';
+    echo '<p class="eyebrow site-shell__eyebrow">Web-programozás 1 előadás házi feladat</p>';
     echo '<strong class="site-shell__brand">Szoftverleltár portál</strong>';
     echo '</div>';
     echo '<div class="site-shell__header-tools">';
@@ -519,11 +519,12 @@ function renderHomeContent(): string
 {
     return '
       <section class="hero">
-        <p class="eyebrow">Szoftverleltár projekt</p>
-        <h1 class="assignment-title">Web-programozás 1 gyakorlat beadandó feladat</h1>
+        <p class="eyebrow">Elméleti beadandó</p>
+        <h1 class="assignment-title">Web-programozás 1 előadás házi feladat</h1>
         <p class="lead">
-          Ez a többoldalas felület a beadandó dokumentum szerkezetéhez igazodik. A fő fókusz a szoftverleltár,
-          a hozzá tartozó CRUD, a kapcsolatfelvétel, a képgaléria és a bejelentkezéses működés bemutatása.
+          Ez a többoldalas felület az előadás házi feladat szemléltető anyagaként készült. A szoftverleltár témáján
+          keresztül mutatja be a fontosabb webes megoldásokat, valamint a hozzájuk kapcsolódó adatkezelési,
+          kapcsolatfelvételi, képgalériás és bejelentkezéses működést.
         </p>
       </section>
 
@@ -589,7 +590,7 @@ function renderAuthContent(): string
         <p class="eyebrow">Belépés / Regisztráció</p>
         <h1>Felhasználói hozzáférés</h1>
         <p class="lead">
-          A beadandó dokumentum szerint a rendszer tartalmaz belépést, kilépést és regisztrációt.
+          Az elméleti beadandó kísérőfelülete tartalmaz belépést, kilépést és regisztrációt.
           A publikus felületen érzékeny belépési adat nem jelenik meg.
         </p>
       </section>

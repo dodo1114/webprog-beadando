@@ -1,8 +1,8 @@
-# Assignment Checklist
+# Elméleti Beadandó Ellenőrzőlista
 
-Ez a fájl a beadandó végső állapotát foglalja össze.
+Ez a fájl az előadás házi feladathoz készített elméleti beadandó webes kísérőanyagának végső állapotát foglalja össze.
 
-## Kötelező menüpontok
+## Kötelező oldalak és menüpontok
 
 - [x] Kezdőoldal
 - [x] Belépés / Kilépés / Regisztráció
@@ -17,7 +17,7 @@ Ez a fájl a beadandó végső állapotát foglalja össze.
 - [x] Axios
 - [x] OOJS
 
-## Funkcionális blokkok
+## Szemléltető blokkok
 
 - [x] vízszintes menü és reszponzív főoldal
 - [x] két videó és Google térkép a kezdőoldalon
@@ -42,7 +42,7 @@ Ez a fájl a beadandó végső állapotát foglalja össze.
 - [x] `/var/www/html/web1` deploy célmappa
 - [x] ellenőrző belépési adatok csak a nem publikus beadási csomagban szerepelnek
 
-## Beadási kellékek
+## Beadási mellékletek
 
 - [x] kétfős GitHub history
 - [x] részletes dokumentáció a `docs/beadando-dokumentacio.md` fájlban
