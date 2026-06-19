@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web programozás-1 Házi feladat - Fetch API</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="site-wrapper">
+
+        <header>
+            <h1>Web programozás-1 Elõadás Házi feladat</h1>
+        </header>
+
+        <nav>
+            <ul>
+                <li><a href="index.html">Fõoldal</a></li>
+                <li><a href="javascript.html">JS CRUD</a></li>
+                <li><a href="react.html">React CRUD</a></li>
+                <li><a href="spa.html">SPA Menü</a></li>
+                <li><a href="fetchapi.html" class="active">Fetch API</a></li>
+                <li><a href="axios.html">Axios Menü
+                </a></li>
+                <li><a href="oojs.html">OOJS Grafikus</a></li>
+            </ul>
+        </nav>
+
+        <main class="container">
+            <h2>Szoftvertelepítések Kezelése (Natív Fetch API)</h2>
+            <p>Ez a modul a böngészõ beépített, Promise-alapú <strong>Fetch API</strong> technológiájával kommunikál a távoli PHP backenddel.</p>
+
+            <div id="status-msg" style="display: none; padding: 15px; margin-bottom: 20px; border-radius: 4px; font-weight: bold;"></div>
+
+            <div class="form-container">
+                <h3 style="margin-bottom: 15px;">Új telepítés rögzítése</h3>
+                <form id="telepites-form">
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px;">
+                        <input type="number" id="gepid" placeholder="Gép ID (pl. 1)" style="flex: 1; min-width: 150px;" required>
+                        <input type="number" id="szoftverid" placeholder="Szoftver ID (pl. 2)" style="flex: 1; min-width: 150px;" required>
+                        <input type="text" id="verzio" placeholder="Verzió (pl. v2.4)" style="flex: 1; min-width: 150px;" required>
+                        <input type="text" id="datum" placeholder="Dátum (pl. 2026.01.12)" style="flex: 1; min-width: 150px;" required>
+                    </div>
+                    <button type="submit" style="background-color: #28a745; color: white; padding: 12px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Telepítés Mentése (Fetch POST)</button>
+                </form>
+            </div>
+
+            <h3>Aktuális hálózati telepítési leltár</h3>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr style="background-color: #343a40; color: white;">
+                            <th>Helyiség</th>
+                            <th>Gép Típus</th>
+                            <th>IP Cím</th>
+                            <th>Szoftver Neve</th>
+                            <th>Kategória</th>
+                            <th>Verzió</th>
+                            <th>Dátum</th>
+                            <th style="text-align: center;">Mûveletek</th>
+                        </tr>
+                    </thead>
+                    <tbody id="telepites-tbody">
+                        <tr>
+                            <td colspan="8" style="padding: 15px; text-align: center; color: #666;">Adatok betöltése folyamatban...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+
+    <footer>
+        <p>Készítették: <strong>Hársfalvi-Kuczmogh Miklós (D19FB3)</strong> és <strong>Krakovszki Zalan Lorant (D3FKB4)</strong></p>
+    </footer>
+    </div> <script>
+        const API_URL = "api.php";
+
+        document.addEventListener("DOMContentLoaded", loadDataWithFetch);
+        document.getElementById("telepites-form").addEventListener("submit", handleSaveFetch);
+
+        function showMessage(text, isError = false) {
+            const msgDiv = document.getElementById("status-msg");
+            msgDiv.innerText = text;
+            msgDiv.style.display = "block";
+            msgDiv.style.backgroundColor = isError ? "#f8d7da" : "#e2f0d9";
+            msgDiv.style.color = isError ? "#721c24" : "#385723";
+        }
+
+        function loadDataWithFetch() {
+            fetch(API_URL)
+                .then(res => res.json())
+                .then(data => {
+                    const tbody = document.getElementById("telepites-tbody");
+                    tbody.innerHTML = ""; 
+
+                    if (data.error) {
+                        showMessage(data.error, true);
+                        return;
+                    }
+
+                    if (!Array.isArray(data) || data.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="8" style="padding: 15px; text-align: center;">Nincs betölthetõ adat.</td></tr>`;
+                        return;
+                    }
+
+                    data.forEach((item, index) => {
+                        const tr = document.createElement("tr");
+                        tr.style.backgroundColor = index % 2 === 0 ? "#ffffff" : "#f9f9f9";
+                        tr.innerHTML = `
+                            <td>${item.hely || '-'}</td>
+                            <td>${item.tipus || '-'}</td>
+                            <td>${item.ipcim || '-'}</td>
+                            <td style="font-weight: bold; color: #2c3e50;">${item.szoftver_neve || '-'}</td>
+                            <td>${item.kategoria || '-'}</td>
+                            <td>${item.verzio || '-'}</td>
+                            <td>${item.datum || '-'}</td>
+                            <td style="text-align: center;">
+                                <button onclick="handleDeleteFetch(${item.gepid}, ${item.szoftverid})" style="background-color: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 3px; cursor: pointer;">Töröl</button>
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                })
+                .catch(err => console.error(err));
+        }
+
+        function handleSaveFetch(event) {
+            event.preventDefault();
+            const gepid = document.getElementById("gepid").value;
+            const szoftverid = document.getElementById("szoftverid").value;
+            const verzio = document.getElementById("verzio").value;
+            const datum = document.getElementById("datum").value;
+
+            fetch(API_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json; charset=UTF-8" },
+                body: JSON.stringify({ gepid: parseInt(gepid), szoftverid: parseInt(szoftverid), verzio: verzio, datum: datum })
+            })
+            .then(res => res.json())
+            .then(resData => {
+                if (resData.success) {
+                    showMessage("Sikeres mentés!");
+                    document.getElementById("telepites-form").reset();
+                    loadDataWithFetch();
+                } else {
+                    showMessage(resData.message, true);
+                }
+            });
+        }
+
+        function handleDeleteFetch(gId, szId) {
+            if (confirm("Biztos törlöd?")) {
+                fetch(API_URL, {
+                    method: "DELETE",
+                    headers: { "Content-Type": "application/json; charset=UTF-8" },
+                    body: JSON.stringify({ gepid: gId, szoftverid: szId })
+                })
+                .then(res => res.json())
+                .then(resData => {
+                    if (resData.success) {
+                        showMessage("Törölve!");
+                        loadDataWithFetch();
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>
