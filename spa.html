@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Szoftverleltár - SPA Alkalmazások</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Extra stílusok a játékokhoz és a belső menühöz */
+        .spa-nav {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 25px;
+            background: #e9ecef;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .spa-nav button {
+            background-color: #7f8c8d;
+        }
+        .spa-nav button.active-sub {
+            background-color: var(--accent-color);
+        }
+        
+        /* Számológép dizájn */
+        .calc-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            max-width: 300px;
+            margin: 20px auto;
+        }
+        .calc-screen {
+            grid-column: span 4;
+            background-color: #2c3e50;
+            color: white;
+            text-align: right;
+            padding: 15px;
+            font-size: 24px;
+            border-radius: 4px;
+            min-height: 30px;
+        }
+
+        /* Amőba játék dizájn */
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+            max-width: 240px;
+            margin: 20px auto;
+        }
+        .square {
+            background-color: #fff;
+            border: 2px solid var(--primary-color);
+            font-size: 32px;
+            font-weight: bold;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+        .square:hover {
+            background-color: #f0f0f0;
+        }
+        .status-text {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Web programozás-1 Előadás Házi feladat</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Főoldal</a></li>
+                <li><a href="javascript.html">JavaScript CRUD</a></li>
+                <li><a href="react.html">React CRUD</a></li>
+                <li><a href="spa.html" class="active">SPA Menü</a></li>
+                <li><a href="fetchapi.html">Fetch API</a></li>
+                <li><a href="axios.html">Axios Menü</a></li>
+                <li><a href="oojs.html">OOJS Grafikus</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="crud-box">
+            <h2>Egyoldalas Alkalmazás (SPA) Almodulok</h2>
+            <p>Ez az oldal nem töltődik újra. Az alábbi belső menüpontokkal válthat a két reaktív komponens-alkalmazás között.</p>
+
+            <div class="spa-nav">
+                <button id="sub-menu-calc" class="active-sub" onclick="switchTab('calc')">1. Számológép (Calculator)</button>
+                <button id="sub-menu-game" onclick="switchTab('game')">2. Amőba Játék (Tic-Tac-Toe)</button>
+            </div>
+
+            <div id="panel-calc">
+                <h3 style="text-align:center;">Reaktív Számológép</h3>
+                <div class="calc-screen" id="calc-display">0</div>
+                <div class="calc-grid">
+                    <button class="btn-danger" style="grid-column: span 2;" onclick="handleCalc('C')">C</button>
+                    <button class="btn-secondary" onclick="handleCalc('/')">/</button>
+                    <button class="btn-secondary" onclick="handleCalc('*')">*</button>
+                    <button onclick="handleCalc('7')">7</button>
+                    <button onclick="handleCalc('8')">8</button>
+                    <button onclick="handleCalc('9')">9</button>
+                    <button class="btn-secondary" onclick="handleCalc('-')">-</button>
+                    <button onclick="handleCalc('4')">4</button>
+                    <button onclick="handleCalc('5')">5</button>
+                    <button onclick="handleCalc('6')">6</button>
+                    <button class="btn-secondary" onclick="handleCalc('+')">+</button>
+                    <button onclick="handleCalc('1')">1</button>
+                    <button onclick="handleCalc('2')">2</button>
+                    <button onclick="handleCalc('3')">3</button>
+                    <button style="grid-row: span 2; background-color: var(--accent-color);" onclick="handleCalc('=')">=</button>
+                    <button style="grid-column: span 2;" onclick="handleCalc('0')">0</button>
+                    <button onclick="handleCalc('.')">.</button>
+                </div>
+            </div>
+
+            <div id="panel-game" style="display: none;">
+                <h3 style="text-align:center;">Tic-Tac-Toe (Amőba) Játék</h3>
+                <div class="status-text" id="game-status">Következő játékos: X</div>
+                <div class="board" id="game-board">
+                    </div>
+                <div style="text-align:center; margin-top:15px;">
+                    <button onclick="resetGame()">Játék Újraindítása</button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+        <footer>
+        <p>Készítették: <strong>Hársfalvi-Kuczmogh Miklós (D19FB3)</strong> és <strong>Krakovszki Zalan Lorant (D3FKB4)</strong></p>
+    </footer>
+    <script>
+        // --- SPA NAVIGÁCIÓS STATE ---
+        let currentTab = 'calc';
+
+        function switchTab(tabName) {
+            currentTab = tabName;
+            if (tabName === 'calc') {
+                document.getElementById('panel-calc').style.display = 'block';
+                document.getElementById('panel-game').style.display = 'none';
+                document.getElementById('sub-menu-calc').classList.add('active-sub');
+                document.getElementById('sub-menu-game').classList.remove('active-sub');
+            } else {
+                document.getElementById('panel-calc').style.display = 'none';
+                document.getElementById('panel-game').style.display = 'block';
+                document.getElementById('sub-menu-calc').classList.remove('active-sub');
+                document.getElementById('sub-menu-game').classList.add('active-sub');
+                renderGameBoard(); // Frissítsük a pályát belépéskor
+            }
+        }  
+
+        // --- 1. KOMPONENS: SZÁMOLÓGÉP STATE ÉS LOGIKA ---
+        let calcState = { displayValue: '0' };
+
+        function handleCalc(val) {
+            if (val === 'C') {
+                calcState.displayValue = '0';
+            } else if (val === '=') {
+                try {
+                    // Biztonságos kiértékelés
+                    calcState.displayValue = String(Function('"use strict";return (' + calcState.displayValue + ')')());
+                } catch (e) {
+                    calcState.displayValue = 'Hiba';
+                }
+            } else {
+                if (calcState.displayValue === '0' || calcState.displayValue === 'Hiba') {
+                    calcState.displayValue = val;
+                } else {
+                    calcState.displayValue += val;
+                }
+            }
+            // State szinkronizáció a képernyővel
+            document.getElementById('calc-display').innerText = calcState.displayValue;
+        }
+
+        // --- 2. KOMPONENS: AMŐBA STATE ÉS LOGIKA ---
+        let gameState = {
+            squares: Array(9).fill(null),
+            xIsNext: true
+        };
+
+        function renderGameBoard() {
+            const boardContainer = document.getElementById('game-board');
+            boardContainer.innerHTML = '';
+            
+            gameState.squares.forEach((value, index) => {
+                const squareBtn = document.createElement('div');
+                squareBtn.className = 'square';
+                squareBtn.innerText = value || '';
+                squareBtn.onclick = () => handleSquareClick(index);
+                boardContainer.appendChild(squareBtn);
+            });
+
+            // Állapotjelző szöveg frissítése
+            const winner = calculateWinner(gameState.squares);
+            const statusTarget = document.getElementById('game-status');
+            if (winner) {
+                statusTarget.innerText = 'Győztes: ' + winner + '! 🎉';
+            } else if (gameState.squares.every(s => s !== null)) {
+                statusTarget.innerText = 'Döntetlen! 🤝';
+            } else {
+                statusTarget.innerText = 'Következő játékos: ' + (gameState.gameStateXIsNext ? 'X' : 'O');
+            }
+        }
+
+        function handleSquareClick(index) {
+            const winner = calculateWinner(gameState.squares);
+            if (winner || gameState.squares[index]) return;
+
+            // State másolása és módosítása (Immutability elv)
+            gameState.squares[index] = gameState.gameStateXIsNext ? 'X' : 'O';
+            gameState.gameStateXIsNext = !gameState.gameStateXIsNext;
+
+            renderGameBoard();
+        }
+
+        function resetGame() {
+            gameState.squares = Array(9).fill(null);
+            gameState.gameStateXIsNext = true;
+            renderGameBoard();
+        }
+
+        function calculateWinner(squares) {
+            const lines = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8], // Vízszintesek
+                [0, 3, 6], [1, 4, 7], [2, 5, 8], // Függőlegesek
+                [0, 4, 8], [2, 4, 6]             // Átlók
+            ];
+            for (let i = 0; i < lines.length; i++) {
+                const [a, b, c] = lines[i];
+                if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+                    return squares[a];
+                }
+            }
+            return null;
+        }
+
+        // Kezdő beállítás
+        gameState.gameStateXIsNext = true;
+    </script>
+</body>
+</html>
