@@ -1,0 +1,154 @@
+/* ==========================================
+   MINDEN ALAPHELYZETBE ÁLLÍTÁSA (RESET)
+   ========================================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    width: 100%;
+    max-width: 100%;
+    background-color: #f4f7f6;
+    color: #333333;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden; /* Letiltja az oldalsó kibillenést */
+}
+
+/* ==========================================
+   KÖZPONTI TARTALMI DOBOZ (EZ TARTJA KÖZÉPEN AZ EGÉSZ OLDALT)
+   ========================================== */
+.site-wrapper {
+    width: 95%;
+    max-width: 1200px;
+    margin: 0 auto; /* Tűpontosan középre zárja a teljes oldalt */
+    background-color: #ffffff;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+
+/* ==========================================
+   FEJLÉC ÉS MENÜSOR STÍLUSAI
+   ========================================== */
+header {
+    background-color: #1a252f;
+    color: #ffffff;
+    text-align: center;
+    padding: 35px 20px;
+}
+
+header h1 {
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+nav {
+    background-color: #2c3e50;
+    padding: 15px;
+    border-bottom: 4px solid #1abc9c;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap; /* Mobilbarát tördelés */
+}
+
+nav ul li {
+    display: inline-block;
+}
+
+nav ul li a {
+    color: #ffffff !important; /* Fix fehér betűk, nem tudnak eltűnni */
+    text-decoration: none;
+    font-weight: bold;
+    padding: 10px 18px;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    display: block;
+    transition: background 0.2s;
+}
+
+nav ul li a:hover {
+    background-color: #34495e;
+}
+
+/* Aktív menüpont (Zöld gomb) */
+nav ul li a.active {
+    background-color: #1abc9c !important;
+    color: #ffffff !important;
+}
+
+/* ==========================================
+   BELSŐ TARTALOM (MAIN) ÉS TÁBLÁZATOK
+   ========================================== */
+.container {
+    padding: 35px 25px; /* Biztonságos belső margó a szövegeknek */
+}
+
+main h2 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+    font-size: 1.8rem;
+    border-bottom: 2px solid #eeeeee;
+    padding-bottom: 10px;
+}
+
+main p {
+    margin-bottom: 25px;
+    color: #666;
+}
+
+/* Űrlap */
+.form-container {
+    background-color: #f9f9f9;
+    border: 1px solid #dddddd;
+    padding: 20px;
+    border-radius: 6px;
+    margin-bottom: 30px;
+}
+
+.form-container input {
+    border: 1px solid #cccccc;
+    padding: 10px;
+    font-size: 0.95rem;
+    border-radius: 4px;
+    outline: none;
+}
+
+/* Görgethető táblázat konténer (megvédi a felületet a szétcsúszástól) */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 15px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px;
+}
+
+th {
+    background-color: #343a40;
+    color: #ffffff;
+    padding: 12px;
+    text-align: left;
+}
+
+td {
+    padding: 12px;
+    border-bottom: 1px solid #eeeeee;
+}
+
+footer {
+    background-color: #1a252f;
+    color: #bdc3c7;
+    text-align: center;
+    padding: 25px 20px;
+    font-size: 0.9rem;
+}
