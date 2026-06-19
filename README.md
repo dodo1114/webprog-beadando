@@ -18,12 +18,30 @@ A projekt a szoftverleltár adatain keresztül mutatja be a kliensoldali JavaScr
 - `oojs.html` – ES6 osztályokra és öröklésre épülő grafikus alkalmazás
 - `api.php` – JSON-alapú PHP/PDO CRUD végpont
 - `style.css` – közös megjelenés
+- `react/src` – npm-importos React, SPA és Axios forráskód
+- `react/dist` – böngészőben futtatható, helyileg buildelt változatok
 
 ## Követelmények
 
 - PHP 8 vagy újabb, PDO MySQL bővítménnyel
 - MySQL/MariaDB adatbázis a `gep`, `szoftver` és `telepites` táblákkal
-- internetkapcsolat a React, ReactDOM és Axios CDN-fájlok betöltéséhez
+- Node.js és npm csak a React-források újrabuildeléséhez
+
+## React build
+
+A React, SPA és Axios modulok nem használnak Babel standalone vagy CDN-ről betöltött React runtime-ot. A források npm-csomagokat importálnak, és az esbuild böngészőcsomagokat készít:
+
+```powershell
+cd react
+npm install
+npm run build
+```
+
+A build a `react/dist/assets` könyvtárat és a három ellenőrizhető HTML-változatot frissíti.
+
+## SPA minták forrása
+
+A számológép és az amőba saját React-komponensként készült, az órai Calculator és Tic-Tac-Toe példák felépítését követve. Külső alkalmazáskód nem került bemásolásra.
 
 ## Adatbázis-konfiguráció
 
