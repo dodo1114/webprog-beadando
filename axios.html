@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web programozás-1 Házi feladat - React + Axios</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+
+    <div class="site-wrapper">
+
+        <header>
+            <h1>Web programozás-1 Előadás Házi feladat</h1>
+        </header>
+
+        <nav>
+            <ul>
+                <li><a href="index.html">Főoldal</a></li>
+                <li><a href="javascript.html">JS CRUD</a></li>
+                <li><a href="react.html">React CRUD</a></li>
+                <li><a href="spa.html">SPA Menü</a></li>
+                <li><a href="fetchapi.html">Fetch API</a></li>
+                <li><a href="axios.html" class="active">Axios Menü</a></li>
+                <li><a href="oojs.html">OOJS Grafikus</a></li>
+            </ul>
+        </nav>
+
+        <main class="container">
+            <h2>Szoftvertelepítések Kezelése (React + Axios)</h2>
+            <p>Ez a modul az Axios kliens segítségével kommunikál a szerveroldali PHP API-val.</p>
+
+            <div id="react-app"></div>
+        </main>
+
+    <footer>
+        <p>Készítették: <strong>Hársfalvi-Kuczmogh Miklós (D19FB3)</strong> és <strong>Krakovszki Zalan Lorant (D3FKB4)</strong></p>
+    </footer>
+    </div> <script>
+        const { useState, useEffect } = React;
+        const e = React.createElement;
+
+        function TelepitesAxiosCrud() {
+            const [telepitesek, setTelepitesek] = useState([]);
+            const [gepid, setGepid] = useState("");
+            const [szoftverid, setSzoftverid] = useState("");
+            const [verzio, setVerzio] = useState("");
+            const [datum, setDatum] = useState("");
+            const [uzenet, setUzenet] = useState("");
+
+            const API_URL = "api.php";
+
+            const loadData = () => {
+                axios.get(API_URL)
+                    .then(response => {
+                        if (Array.isArray(response.data)) setTelepitesek(response.data);
+                    })
+                    .catch(error => console.error(error));
+            };
+
+            useEffect(() => { loadData(); }, []);
+
+            const handleSave = (event) => {
+                event.preventDefault();
+                axios.post(API_URL, { gepid: parseInt(gepid), szoftverid: parseInt(szoftverid), verzio: verzio, datum: datum })
+                .then(response => {
+                    if (response.data.success) {
+                        setUzenet("Sikeres mentés!");
+                        setGepid(""); setSzoftverid(""); setVerzio(""); setDatum("");
+                        loadData();
+                    }
+                });
+            };
+
+            const handleDelete = (gId, szId) => {
+                if (confirm("Biztos törlöd?")) {
+                    axios.delete(API_URL, { data: { gepid: gId, szoftverid: szId } })
+                    .then(response => {
+                        if (response.data.success) {
+                            setUzenet("Sikeres törlés!");
+                            loadData();
+                        }
+                    });
+                }
+            };
+
+            return e("div", null,
+                uzenet && e("div", { style: { padding: "10px", marginBottom: "15px", backgroundColor: "#e2f0d9", color: "#385723", borderRadius: "4px" } }, uzenet),
+
+                e("div", { className: "form-container" },
+                    e("h3", { style: { marginBottom: "15px" } }, "Új telemetry rögzítése"),
+                    e("form", { onSubmit: handleSave },
+                        e("div", { style: { display: "flex", gap: "10px", flexWrap: "wrap", marginBottom: "15px" } },
+                            e("input", { type: "number", placeholder: "Gép ID", value: gepid, onChange: (e) => setGepid(e.target.value), style: { flex: "1" } }),
+                            e("input", { type: "number", placeholder: "Szoftver ID", value: szoftverid, onChange: (e) => setSzoftverid(e.target.value), style: { flex: "1" } }),
+                            e("input", { type: "text", placeholder: "Verzió", value: verzio, onChange: (e) => setVerzio(e.target.value), style: { flex: "1" } }),
+                            e("input", { type: "text", placeholder: "Dátum", value: datum, onChange: (e) => setDatum(e.target.value), style: { flex: "1" } })
+                        ),
+                        e("button", { type: "submit", style: { backgroundColor: "#17a2b8", color: "white", padding: "10px 15px", border: "none", borderRadius: "4px", cursor: "pointer", fontWeight: "bold" } }, "Telepítés Mentése")
+                    )
+                ),
+
+                e("h3", null, "Aktuális hálózati telepítési leltár"),
+                e("div", { className: "table-responsive" },
+                    e("table", null,
+                        e("thead", null,
+                            e("tr", { style: { backgroundColor: "#343a40", color: "white" } },
+                                e("th", null, "Helyiség"), e("th", null, "Gép Típus"), e("th", null, "IP Cím"), e("th", null, "Szoftver Neve"), e("th", null, "Kategória"), e("th", null, "Verzió"), e("th", null, "Dátum"), e("th", { style: { textAlign: "center" } }, "Műveletek")
+                            )
+                        ),
+                        e("tbody", null,
+                            telepitesek.map((item, index) => 
+                                e("tr", { key: index, style: { backgroundColor: index % 2 === 0 ? "#fff" : "#f9f9f9" } },
+                                    e("td", null, item.hely), e("td", null, item.tipus), e("td", null, item.ipcim), e("td", { style: { fontWeight: "bold" } }, item.szoftver_neve), e("td", null, item.kategoria), e("td", null, item.verzio), e("td", null, item.datum),
+                                    e("td", { style: { textAlign: "center" } }, e("button", { onClick: () => handleDelete(item.gepid, item.szoftverid), style: { backgroundColor: "#dc3545", color: "white", border: "none", padding: "5px 10px", borderRadius: "3px", cursor: "pointer" } }, "Töröl"))
+                                )
+                            )
+                        )
+                    )
+                )
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('react-app'));
+        root.render(e(TelepitesAxiosCrud));
+    </script>
+</body>
+</html>
