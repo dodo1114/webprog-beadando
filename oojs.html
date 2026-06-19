@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Szoftverleltár - OOJS Grafikus Alkalmazás</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Egyedi stílusok az objektumorientált játékmezőhöz */
+        #canvas-container {
+            position: relative;
+            width: 100%;
+            height: 450px;
+            background: linear-gradient(to bottom, #1a2a3a, #2c3e50);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 20px;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+        }
+        .falling-item {
+            position: absolute;
+            padding: 6px 12px;
+            background-color: var(--accent-color);
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            user-select: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            transition: transform 0.1s;
+        }
+        .falling-item:hover {
+            transform: scale(1.1);
+            background-color: #e74c3c;
+        }
+        .score-board {
+            display: flex;
+            justify-content: space-between;
+            background: #e9ecef;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Web programozás-1 Előadás Házi feladat</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Főoldal</a></li>
+                <li><a href="javascript.html">JavaScript CRUD</a></li>
+                <li><a href="react.html">React CRUD</a></li>
+                <li><a href="spa.html">SPA Menü</a></li>
+                <li><a href="fetchapi.html">Fetch API</a></li>
+                <li><a href="axios.html">Axios Menü</a></li>
+                <li><a href="oojs.html" class="active">OOJS Grafikus</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="crud-box">
+            <h2>Objektumorientált Grafikus Alkalmazás</h2>
+            <p>Kattintson a lehulló szoftverekre, hogy "telepítse" őket és pontokat szerezzen! A háttérben futó motor tiszta ES6 osztálystruktúrára épül.</p>
+            
+            <div class="score-board">
+                <div>Telepített szoftverek (Pontszám): <span id="score-text">0</span></div>
+                <div>Elszalasztott: <span id="missed-text">0</span>/10</div>
+            </div>
+
+            <div id="canvas-container"></div>
+            
+            <div style="text-align: center; margin-top: 15px;">
+                <button id="btn-start" onclick="startGame()">Játék Indítása / Újraindítás</button>
+            </div>
+        </div>
+    </main>
+        <footer>
+        <p>Készítették: <strong>Hársfalvi-Kuczmogh Miklós (D19FB3)</strong> és <strong>Krakovszki Zalan Lorant (D3FKB4)</strong></p>
+    </footer>
+
+    <script>
+        let score = 0;
+        let missed = 0;
+        let gameInterval = null;
+        let activeObjects = [];
+        const container = document.getElementById('canvas-container');
+
+        // Szoftver nevek tömbje a szoftver.txt-ből inspirálódva
+        const szoftverNevek = ["Acrobat Reader", "Notepad++", "LibreOffice", "Mozilla Firefox", "Dev-C++", "Skype", "Total Commander", "VLC Player"];
+
+        // 1. ALAPOSZTÁLY (class)
+        class FallingObject {
+            constructor(x, speed) {
+                this.x = x;
+                this.y = -40; // Képernyő felett indul
+                this.speed = speed;
+                this.domElement = document.createElement('div');
+            }
+
+            // Alap metódus a pozíció frissítésére
+            move() {
+                this.y += this.speed;
+                this.domElement.style.top = this.y + 'px';
+            }
+
+            // Eltávolítás a képernyőről
+            remove() {
+                if (this.domElement && this.domElement.parentNode) {
+                    this.domElement.parentNode.removeChild(this.domElement);
+                }
+            }
+        }
+
+        // 2. SZÁRMAZTATOTT OSZTÁLY (extends, super)
+        class SzoftverObject extends FallingObject {
+            constructor(x, speed, szoftverNev) {
+                // Meghívjuk az ősosztály konstruktorát (super)
+                super(x, speed);
+                this.szoftverNev = szoftverNev;
+                this.initElement();
+            }
+
+            // Egyedi inicializáló metódus
+            initElement() {
+                this.domElement.className = 'falling-item';
+                this.domElement.style.left = this.x + 'px';
+                this.domElement.style.top = this.y + 'px';
+                this.domElement.innerText = this.szoftverNev;
+
+                // Kattintás esemény (elkapás)
+                this.domElement.onclick = () => {
+                    score++;
+                    document.getElementById('score-text').innerText = score;
+                    this.remove();
+                    // Kivesszük az aktív listából
+                    activeObjects = activeObjects.filter(obj => obj !== this);
+                };
+
+                // KÖTELEZŐ ELEM: document.body.appendChild (vagy container.appendChild) vizuális megjelenítéshez
+                container.appendChild(this.domElement);
+            }
+        }
+
+        // Játékmenet irányítása
+        function spawnObject() {
+            if (missed >= 10) {
+                clearInterval(gameInterval);
+                alert("Játék Vége! Sikeresen leltározott/telepített szoftverek száma: " + score);
+                return;
+            }
+
+            const randomX = Math.floor(Math.random() * (container.clientWidth - 150));
+            const randomSpeed = Math.random() * 2 + 2; // Sebesség 2 és 4 között
+            const randomNev = szoftverNevek[Math.floor(Math.random() * szoftverNevek.length)];
+
+            // Példányosítás az OOJS osztályból
+            const ujSzoftver = new SzoftverObject(randomX, randomSpeed, randomNev);
+            activeObjects.push(ujSzoftver);
+        }
+
+        function updateGameLoop() {
+            activeObjects.forEach((obj, index) => {
+                obj.move();
+                // Ha leért a konténer aljára
+                if (obj.y > container.clientHeight) {
+                    obj.remove();
+                    activeObjects.splice(index, 1);
+                    missed++;
+                    document.getElementById('missed-text').innerText = missed;
+                }
+            });
+        }
+
+        function startGame() {
+            // Reset
+            clearInterval(gameInterval);
+            activeObjects.forEach(obj => obj.remove());
+            activeObjects = [];
+            score = 0;
+            missed = 0;
+            document.getElementById('score-text').innerText = score;
+            document.getElementById('missed-text').innerText = missed;
+
+            // Motor indítása: 1.2 másodpercenként új szoftver esik le
+            gameInterval = setInterval(() => {
+                spawnObject();
+            }, 1200);
+
+            // Folyamatos mozgásfrissítés (60 FPS környéke)
+            if(!window.loopRegulated) {
+                setInterval(updateGameLoop, 20);
+                window.loopRegulated = true;
+            }
+        }
+    </script>
+</body>
+</html>
