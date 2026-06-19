@@ -1,143 +1,20 @@
 <!DOCTYPE html>
 <html lang="hu">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Szoftverleltár - React CRUD</title>
-    <link rel="stylesheet" href="style.css">
-    
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Szoftverleltár - React CRUD</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-    <header>
-        <h1>Web programozás-1 Előadás Házi feladat</h1>
-        <nav>
-            <ul>
-                <li><a href="index.html">Főoldal</a></li>
-                <li><a href="javascript.html">JavaScript CRUD</a></li>
-                <li><a href="react.html" class="active">React CRUD</a></li>
-                <li><a href="spa.html">SPA Menü</a></li>
-                <li><a href="fetchapi.html">Fetch API</a></li>
-                <li><a href="axios.html">Axios Menü</a></li>
-                <li><a href="oojs.html">OOJS Grafikus</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <main class="container" id="react-app"></main>
-
-        <footer>
-        <p>Készítették: <strong>Hársfalvi-Kuczmogh Miklós (D19FB3)</strong> és <strong>Krakovszki Zalan Lorant (D3FKB4)</strong></p>
-    </footer>
-    <script>
-        const e = React.createElement;
-        const { useState } = React;
-
-        function SzoftverReactCrud() {
-            // Adatok a szoftver.txt-ből
-            const [szoftverek, setSzoftverek] = useState([
-                { id: 12, nev: "Acrobat Reader", kategoria: "pdf-olvasás" },
-                { id: 28, nev: "Notepad++", kategoria: "editor" },
-                { id: 57, nev: "LibreOffice", kategoria: "irodai programcsomag" },
-                { id: 63, nev: "Mozilla Firefox", kategoria: "böngészés" },
-                { id: 65, nev: "Dev-C++", kategoria: "fejlesztő környezet" }
-            ]);
-
-            const [id, setId] = useState("");
-            const [nev, setNev] = useState("");
-            const [kategoria, setKategoria] = useState("");
-            const [isEditing, setIsEditing] = useState(false);
-
-            const handleSave = () => {
-                if (!nev.trim() || !kategoria.trim()) {
-                    alert("Kérjük, töltsön ki minden mezőt!");
-                    return;
-                }
-
-                if (!isEditing) {
-                    const ujId = szoftverek.length > 0 ? Math.max(...szoftverek.map(s => s.id)) + 1 : 1;
-                    setSzoftverek([...szoftverek, { id: ujId, nev: nev.trim(), kategoria: kategoria.trim() }]);
-                } else {
-                    setSzoftverek(szoftverek.map(s => s.id === parseInt(id) ? { ...s, nev: nev.trim(), kategoria: kategoria.trim() } : s));
-                    handleCancel();
-                }
-                setNev("");
-                setKategoria("");
-            };
-
-            const handleEdit = (s) => {
-                setId(s.id);
-                setNev(s.nev);
-                setKategoria(s.kategoria);
-                setIsEditing(true);
-            };
-
-            const handleCancel = () => {
-                setId("");
-                setNev("");
-                setKategoria("");
-                setIsEditing(false);
-            };
-
-            const handleDelete = (szoftverId) => {
-                if (confirm("Biztosan törölni szeretné ezt a szoftvert?")) {
-                    setSzoftverek(szoftverek.filter(s => s.id !== szoftverId));
-                    if (id === szoftverId) handleCancel();
-                }
-            };
-
-            // HTML struktúra felépítése React elemekkel (Babel-mentes verzió)
-            return e('div', { className: 'crud-box' },
-                e('h2', null, 'Szoftverek Kezelése (React Component State)'),
-                e('p', null, 'Ez a modul React alapú komponenseket és useState állapotváltozókat használ a CRUD műveletekhez.'),
-                
-                // Form Űrlap
-                e('fieldset', { style: { border: '1px solid #ccc', padding: '15px', borderRadius: '4px', marginBottom: '20px' } },
-                    e('legend', null, isEditing ? `Szoftver módosítása (ID: ${id})` : 'Új szoftver hozzáadása'),
-                    e('div', { className: 'form-group' },
-                        e('label', null, 'Szoftver neve:'),
-                        e('input', { type: 'text', value: nev, onChange: (e) => setNev(e.target.value), placeholder: 'Pl. Adobe Photoshop' })
-                    ),
-                    e('div', { className: 'form-group' },
-                        e('label', null, 'Kategória:'),
-                        e('input', { type: 'text', value: kategoria, onChange: (e) => setKategoria(e.target.value), placeholder: 'Pl. képszerkesztés' })
-                    ),
-                    e('button', { type: 'button', onClick: handleSave }, isEditing ? 'Módosítás mentése' : 'Mentés'),
-                    isEditing ? e('button', { type: 'button', className: 'btn-secondary', style: { marginLeft: '10px' }, onClick: handleCancel }, 'Mégse') : null
-                ),
-
-                // Táblázat
-                e('table', null,
-                    e('thead', null,
-                        e('tr', null,
-                            e('th', null, 'ID'),
-                            e('th', null, 'Szoftver neve'),
-                            e('th', null, 'Kategória'),
-                            e('th', null, 'Műveletek')
-                        )
-                    ),
-                    e('tbody', null,
-                        szoftverek.map(s => 
-                            e('tr', { key: s.id },
-                                e('td', null, s.id),
-                                e('td', null, s.nev),
-                                e('td', null, s.kategoria),
-                                e('td', { className: 'actions' },
-                                    e('button', { onClick: () => handleEdit(s) }, 'Szerkeszt'),
-                                    e('button', { className: 'btn-danger', onClick: () => handleDelete(s.id) }, 'Töröl')
-                                )
-                            )
-                        )
-                    )
-                )
-            );
-        }
-
-        // Renderelés
-        const root = ReactDOM.createRoot(document.getElementById('react-app'));
-        root.render(e(SzoftverReactCrud));
-    </script>
+  <header><h1>Web programozás-1 Előadás Házi feladat</h1></header>
+  <nav><ul>
+    <li><a href="index.html">Főoldal</a></li><li><a href="javascript.html">JavaScript CRUD</a></li>
+    <li><a href="react.html" class="active">React CRUD</a></li><li><a href="spa.html">SPA Menü</a></li>
+    <li><a href="fetchapi.html">Fetch API</a></li><li><a href="axios.html">Axios Menü</a></li><li><a href="oojs.html">OOJS Grafikus</a></li>
+  </ul></nav>
+  <main class="container" id="react-app"><p>React alkalmazás betöltése…</p></main>
+  <footer><p>Készítették: <strong>Hársfalvi-Kuczmogh Miklós (D19FB3)</strong> és <strong>Krakovszki Zalán Lóránt (D3FKB4)</strong></p></footer>
+  <script src="react/dist/assets/react-crud.js"></script>
 </body>
 </html>
