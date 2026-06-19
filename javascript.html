@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Szoftverleltár - JavaScript CRUD</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>Web programozás-1 Előadás Házi feladat</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Főoldal</a></li>
+                <li><a href="javascript.html" class="active">JavaScript CRUD</a></li>
+                <li><a href="react.html">React CRUD</a></li>
+                <li><a href="spa.html">SPA Menü</a></li>
+                <li><a href="fetchapi.html">Fetch API</a></li>
+                <li><a href="axios.html">Axios Menü</a></li>
+                <li><a href="oojs.html">OOJS Grafikus</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="crud-box">
+            <h2>Szoftverek Kezelése (Kliensoldali JS tömb)</h2>
+            <p>Ez a modul tisztán memóriában (JavaScript array) végzi a CRUD műveleteket a szoftverleltár adataival.</p>
+
+            <fieldset style="border: 1px solid #ccc; padding: 15px; border-radius: 4px; margin-bottom: 20px;">
+                <legend id="form-title">Új szoftver hozzáadása</legend>
+                <input type="hidden" id="szoftver-id">
+                
+                <div class="form-group">
+                    <label for="szoftver-nev">Szoftver neve:</label>
+                    <input type="text" id="szoftver-nev" placeholder="Pl. Adobe Photoshop">
+                </div>
+                
+                <div class="form-group">
+                    <label for="szoftver-kategoria">Kategória:</label>
+                    <input type="text" id="szoftver-kategoria" placeholder="Pl. képszerkesztés">
+                </div>
+                
+                <button type="button" id="btn-save" onclick="saveSzoftver()">Mentés</button>
+                <button type="button" id="btn-cancel" class="btn-secondary" style="display:none;" onclick="cancelEdit()">Mégse</button>
+            </fieldset>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Szoftver neve</th>
+                        <th>Kategória</th>
+                        <th>Műveletek</th>
+                    </tr>
+                </thead>
+                <tbody id="szoftver-table-body">
+                    </tbody>
+            </table>
+        </div>
+    </main>
+        <footer>
+        <p>Készítették: <strong>Hársfalvi-Kuczmogh Miklós (D19FB3)</strong> és <strong>Krakovszki Zalan Lorant (D3FKB4)</strong></p>
+    </footer>
+
+    <script>
+        // Kiinduló mintaadatok közvetlenül a szoftver.txt-ből kimentve
+        let szoftverek = [
+            { id: 12, nev: "Acrobat Reader", kategoria: "pdf-olvasás" },
+            { id: 28, nev: "Notepad++", kategoria: "editor" },
+            { id: 57, nev: "LibreOffice", kategoria: "irodai programcsomag" },
+            { id: 63, nev: "Mozilla Firefox", kategoria: "böngészés" },
+            { id: 65, nev: "Dev-C++", kategoria: "fejlesztő környezet" }
+        ];
+
+        // Táblázat kirajzolása (Read)
+        function renderTable() {
+            const tbody = document.getElementById("szoftver-table-body");
+            tbody.innerHTML = "";
+
+            szoftverek.forEach(szoftver => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${szoftver.id}</td>
+                    <td>${szoftver.nev}</td>
+                    <td>${szoftver.kategoria}</td>
+                    <td class="actions">
+                        <button onclick="editSzoftver(${szoftver.id})">Szerkeszt</button>
+                        <button class="btn-danger" onclick="deleteSzoftver(${szoftver.id})">Töröl</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Hozzáadás és Módosítás kezelése (Create / Update)
+        function saveSzoftver() {
+            const idInput = document.getElementById("szoftver-id").value;
+            const nevInput = document.getElementById("szoftver-nev").value.trim();
+            const kategoriaInput = document.getElementById("szoftver-kategoria").value.trim();
+
+            if (!nevInput || !kategoriaInput) {
+                alert("Kérjük, töltsön ki minden mezőt!");
+                return;
+            }
+
+            if (idInput === "") {
+                // CREATE: Új szoftver hozzáadása
+                const ujId = szoftverek.length > 0 ? Math.max(...szoftverek.map(s => s.id)) + 1 : 1;
+                szoftverek.push({
+                    id: ujId,
+                    nev: nevInput,
+                    kategoria: kategoriaInput
+                });
+            } else {
+                // UPDATE: Meglévő szoftver módosítása
+                const id = parseInt(idInput);
+                const index = szoftverek.findIndex(s => s.id === id);
+                if (index !== -1) {
+                    szoftverek[index].nev = nevInput;
+                    szoftverek[index].kategoria = kategoriaInput;
+                }
+                cancelEdit();
+            }
+
+            // Űrlap alaphelyzetbe állítása és táblázat frissítése
+            document.getElementById("szoftver-nev").value = "";
+            document.getElementById("szoftver-kategoria").value = "";
+            renderTable();
+        }
+
+        // Szerkesztési mód bekapcsolása
+        function editSzoftver(id) {
+            const szoftver = szoftverek.find(s => s.id === id);
+            if (!szoftver) return;
+
+            document.getElementById("szoftver-id").value = szoftver.id;
+            document.getElementById("szoftver-nev").value = szoftver.nev;
+            document.getElementById("szoftver-kategoria").value = szoftver.kategoria;
+
+            document.getElementById("form-title").innerText = "Szoftver módosítása (ID: " + id + ")";
+            document.getElementById("btn-save").innerText = "Módosítás mentése";
+            document.getElementById("btn-cancel").style.display = "inline-block";
+        }
+
+        // Szerkesztés megszakítása
+        function cancelEdit() {
+            document.getElementById("szoftver-id").value = "";
+            document.getElementById("szoftver-nev").value = "";
+            document.getElementById("szoftver-kategoria").value = "";
+
+            document.getElementById("form-title").innerText = "Új szoftver hozzáadása";
+            document.getElementById("btn-save").innerText = "Mentés";
+            document.getElementById("btn-cancel").style.display = "none";
+        }
+
+        // Törlés (Delete)
+        function deleteSzoftver(id) {
+            if (confirm("Biztosan törölni szeretné ezt a szoftvert?")) {
+                szoftverek = szoftverek.filter(s => s.id !== id);
+                renderTable();
+                // Ha épp szerkesztés alatt álló elemet töröltünk, reseteljük a formot
+                if (document.getElementById("szoftver-id").value == id) {
+                    cancelEdit();
+                }
+            }
+        }
+
+        // Első indításkor töltsön be a táblázat
+        window.onload = renderTable;
+    </script>
+</body>
+</html>
